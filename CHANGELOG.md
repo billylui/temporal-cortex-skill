@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.4] - 2026-02-23
+
+### Security
+- Pinned MCP server version in `.mcp.json` (`@temporal-cortex/cortex-mcp@0.3.4`) for supply chain auditability
+- Added env var hints to `.mcp.json` for security scanner visibility
+
+### Changed
+- Expanded `metadata.requires`: added `MICROSOFT_CLIENT_SECRET`, `GOOGLE_OAUTH_CREDENTIALS`, `TEMPORAL_CORTEX_TELEMETRY` to `optional_env`; added `config.json` to `credentials`
+- Added `MICROSOFT_CLIENT_SECRET` to MULTI-CALENDAR reference env var table
+
 ## [0.3.3] - 2026-02-22
 
 ### Security
@@ -47,7 +57,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - .mcp.json for local MCP server connection
 - CI pipeline: SKILL.md validation, ShellCheck, JSON validation, link check
 
-[Unreleased]: https://github.com/billylui/temporal-cortex-skill/compare/v0.3.3...HEAD
+[Unreleased]: https://github.com/billylui/temporal-cortex-skill/compare/v0.3.4...HEAD
+[0.3.4]: https://github.com/billylui/temporal-cortex-skill/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/billylui/temporal-cortex-skill/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/billylui/temporal-cortex-skill/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/billylui/temporal-cortex-skill/compare/v0.3.0...v0.3.1
