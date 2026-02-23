@@ -118,7 +118,7 @@ fi
 echo ""
 echo "--- NPX Version Pinning ---"
 
-# setup.sh must use pinned version (e.g., @temporal-cortex/cortex-mcp@0.3.5)
+# setup.sh must use pinned version (e.g., @temporal-cortex/cortex-mcp@0.4.0)
 if grep -q '@temporal-cortex/cortex-mcp@[0-9]' "${SKILL_DIR}/scripts/setup.sh" 2>/dev/null; then
   pass "setup.sh: npx command has version pin"
 else
