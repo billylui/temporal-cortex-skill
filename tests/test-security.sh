@@ -125,13 +125,22 @@ else
   fail "setup.sh: npx command missing version pin"
 fi
 
-# .mcp.json must include OAuth credential env vars for scanner visibility
+# .mcp.json must declare universal config env vars (OAuth vars are optional, not listed)
 MCP_JSON="${SKILL_DIR}/.mcp.json"
+for var in TIMEZONE WEEK_START; do
+  if grep -q "\"${var}\"" "$MCP_JSON" 2>/dev/null; then
+    pass ".mcp.json: declares ${var} env var"
+  else
+    fail ".mcp.json: missing ${var} env var"
+  fi
+done
+
+# .mcp.json must NOT include OAuth env vars (optional bring-your-own-app overrides)
 for var in GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET MICROSOFT_CLIENT_ID MICROSOFT_CLIENT_SECRET; do
   if grep -q "\"${var}\"" "$MCP_JSON" 2>/dev/null; then
-    pass ".mcp.json: declares ${var} env hint"
+    fail ".mcp.json: should not declare ${var} (optional, triggers scanner warnings)"
   else
-    fail ".mcp.json: missing ${var} env hint"
+    pass ".mcp.json: correctly omits ${var}"
   fi
 done
 
@@ -166,17 +175,27 @@ else
   fail "SKILL.md: openclaw.requires.bins missing npx"
 fi
 
-if echo "$FRONTMATTER" | grep -qF -- '- GOOGLE_CLIENT_ID'; then
-  pass "SKILL.md: openclaw.requires.env includes GOOGLE_CLIENT_ID"
+if echo "$FRONTMATTER" | grep -qF -- '- TIMEZONE'; then
+  pass "SKILL.md: openclaw.requires.env includes TIMEZONE"
 else
-  fail "SKILL.md: openclaw.requires.env missing GOOGLE_CLIENT_ID"
+  fail "SKILL.md: openclaw.requires.env missing TIMEZONE"
 fi
 
-if echo "$FRONTMATTER" | grep -qF -- '- MICROSOFT_CLIENT_ID'; then
-  pass "SKILL.md: openclaw.requires.env includes MICROSOFT_CLIENT_ID"
+if echo "$FRONTMATTER" | grep -qF -- '- WEEK_START'; then
+  pass "SKILL.md: openclaw.requires.env includes WEEK_START"
 else
-  fail "SKILL.md: openclaw.requires.env missing MICROSOFT_CLIENT_ID"
+  fail "SKILL.md: openclaw.requires.env missing WEEK_START"
 fi
+
+# OAuth vars should NOT be in openclaw.requires.env (they are optional)
+OPENCLAW_SECTION=$(echo "$FRONTMATTER" | sed -n '/openclaw:/,/primaryEnv:/p')
+for var in GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET MICROSOFT_CLIENT_ID MICROSOFT_CLIENT_SECRET; do
+  if echo "$OPENCLAW_SECTION" | grep -qF -- "- ${var}"; then
+    fail "SKILL.md: openclaw.requires.env should not include ${var} (optional)"
+  else
+    pass "SKILL.md: openclaw.requires.env correctly omits ${var}"
+  fi
+done
 
 if echo "$FRONTMATTER" | grep -q 'credentials.json'; then
   pass "SKILL.md: openclaw.requires.config includes credentials.json path"
@@ -184,10 +203,14 @@ else
   fail "SKILL.md: openclaw.requires.config missing credentials.json path"
 fi
 
-if echo "$FRONTMATTER" | grep -q 'primaryEnv:'; then
-  pass "SKILL.md: openclaw.primaryEnv declared"
+if echo "$FRONTMATTER" | grep -q 'primaryEnv: TIMEZONE'; then
+  pass "SKILL.md: openclaw.primaryEnv is TIMEZONE"
 else
-  fail "SKILL.md: openclaw.primaryEnv missing"
+  if echo "$FRONTMATTER" | grep -q 'primaryEnv:'; then
+    fail "SKILL.md: openclaw.primaryEnv should be TIMEZONE"
+  else
+    fail "SKILL.md: openclaw.primaryEnv missing"
+  fi
 fi
 
 # ---------------------------------------------------------------------------

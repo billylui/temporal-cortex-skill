@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+- Removed OAuth env vars from `metadata.openclaw.requires.env` — optional bring-your-own-app overrides, not required for normal operation (resolves OpenClaw "over-broad credentials" finding)
+- Removed OAuth env vars from `.mcp.json` env block — MCP client UIs no longer prompt for optional fields
+- Changed `openclaw.primaryEnv` from `GOOGLE_CLIENT_ID` to `TIMEZONE`
+- Added missing `WEEK_START` to `openclaw.requires.env`
+
+### Changed
+- Updated MULTI-CALENDAR.md env var table to clarify OAuth vars are for custom OAuth apps only
+- Updated `test-security.sh` assertions to validate corrected metadata structure
+
 ## [0.4.0] - 2026-02-23
 
 ### Added

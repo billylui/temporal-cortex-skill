@@ -18,15 +18,12 @@ metadata:
         - python3
         - docker
       env:
-        - GOOGLE_CLIENT_ID
-        - GOOGLE_CLIENT_SECRET
-        - MICROSOFT_CLIENT_ID
-        - MICROSOFT_CLIENT_SECRET
         - TIMEZONE
+        - WEEK_START
       config:
         - ~/.config/temporal-cortex/credentials.json
         - ~/.config/temporal-cortex/config.json
-    primaryEnv: GOOGLE_CLIENT_ID
+    primaryEnv: TIMEZONE
 ---
 
 # Calendar Scheduling
