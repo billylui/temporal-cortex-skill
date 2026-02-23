@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-02-23
+
 ### Security
 - Removed OAuth env vars from `metadata.openclaw.requires.env` — optional bring-your-own-app overrides, not required for normal operation (resolves OpenClaw "over-broad credentials" finding)
 - Removed OAuth env vars from `.mcp.json` env block — MCP client UIs no longer prompt for optional fields
@@ -91,7 +93,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - .mcp.json for local MCP server connection
 - CI pipeline: SKILL.md validation, ShellCheck, JSON validation, link check
 
-[Unreleased]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/billylui/temporal-cortex-skill/compare/v0.3.6...v0.4.0
 [0.3.6]: https://github.com/billylui/temporal-cortex-skill/compare/v0.3.5...v0.3.6
 [0.3.5]: https://github.com/billylui/temporal-cortex-skill/compare/v0.3.4...v0.3.5
