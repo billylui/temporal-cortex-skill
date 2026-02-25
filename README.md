@@ -3,7 +3,7 @@
 [![CI](https://github.com/billylui/temporal-cortex-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/billylui/temporal-cortex-skill/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**v0.4.4** · February 2026 · [Changelog](CHANGELOG.md)
+**v0.4.5** · February 2026 · [Changelog](CHANGELOG.md)
 
 The calendar-scheduling Agent Skill teaches AI agents the correct workflow for calendar operations using the [Temporal Cortex MCP server](https://github.com/billylui/temporal-cortex-mcp). It provides procedural knowledge for temporal orientation, natural language datetime resolution, multi-calendar availability merging, and conflict-free booking with Two-Phase Commit. Compatible with 26+ agent platforms including Claude Code, Codex CLI, and Cursor.
 

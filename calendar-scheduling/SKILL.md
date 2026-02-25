@@ -7,7 +7,7 @@ compatibility: |-
   Requires npx (Node.js 18+) or Docker for the MCP server. python3 optional (configure/status scripts). Stores OAuth credentials at ~/.config/temporal-cortex/. Works with Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client.
 metadata:
   author: billylui
-  version: "0.4.4"
+  version: "0.4.5"
   mcp-server: "@temporal-cortex/cortex-mcp"
   homepage: "https://github.com/billylui/temporal-cortex-skill"
   repository: "https://github.com/billylui/temporal-cortex-skill"

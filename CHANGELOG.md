@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.5] - 2026-02-25
+
+### Changed
+- Version alignment with MCP server v0.4.5 (tool annotations, prompts, resources, ServerInfo, improved Smithery quality score)
+- Pinned MCP server version to `@temporal-cortex/cortex-mcp@0.4.5` in `.mcp.json` and `setup.sh`
+
 ## [0.4.4] - 2026-02-25
 
 ### Changed
@@ -116,7 +122,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - .mcp.json for local MCP server connection
 - CI pipeline: SKILL.md validation, ShellCheck, JSON validation, link check
 
-[Unreleased]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.3...HEAD
+[Unreleased]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.5...HEAD
+[0.4.5]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.4...v0.4.5
+[0.4.4]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.0...v0.4.1
