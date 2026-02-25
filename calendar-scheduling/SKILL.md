@@ -9,7 +9,7 @@ metadata:
   author: billylui
   version: "0.4.5"
   mcp-server: "@temporal-cortex/cortex-mcp"
-  homepage: "https://github.com/billylui/temporal-cortex-skill"
+  homepage: "https://temporal-cortex.com"
   repository: "https://github.com/billylui/temporal-cortex-skill"
   requires: '{"bins":["npx"],"optional_bins":["python3","docker"],"optional_env":["TIMEZONE","WEEK_START","HTTP_PORT","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","MICROSOFT_CLIENT_ID","MICROSOFT_CLIENT_SECRET","GOOGLE_OAUTH_CREDENTIALS","TEMPORAL_CORTEX_TELEMETRY"],"credentials":["~/.config/temporal-cortex/credentials.json","~/.config/temporal-cortex/config.json"]}'
   openclaw:
