@@ -4,9 +4,9 @@ set -euo pipefail
 
 PROVIDER="${1:-google}"
 
-# Cloud mode: print hosted MCP config and exit
-if [[ "$PROVIDER" == "--cloud" ]]; then
-  echo "=== Temporal Cortex Cloud Mode ==="
+# Platform mode: print hosted MCP config and exit
+if [[ "$PROVIDER" == "--platform" || "$PROVIDER" == "--cloud" ]]; then
+  echo "=== Temporal Cortex Platform Mode ==="
   echo ""
   echo "No local setup required. Sign up at https://app.temporal-cortex.com"
   echo "to get your API key, then configure your MCP client:"
@@ -21,7 +21,7 @@ if [[ "$PROVIDER" == "--cloud" ]]; then
   echo '}'
   echo ""
   echo "Replace YOUR_API_KEY with the key from your dashboard."
-  echo "All 12 tools work identically in cloud mode."
+  echo "All 12 tools work identically in Platform Mode."
   exit 0
 fi
 
@@ -54,12 +54,12 @@ case "$PROVIDER" in
     echo "ERROR: Unknown provider '${PROVIDER}'"
     echo "Supported providers: google, outlook, caldav"
     echo ""
-    echo "Usage: setup.sh [provider|--cloud]"
+    echo "Usage: setup.sh [provider|--platform]"
     echo "  setup.sh           # defaults to google"
     echo "  setup.sh google"
     echo "  setup.sh outlook"
     echo "  setup.sh caldav"
-    echo "  setup.sh --cloud   # print cloud mode config"
+    echo "  setup.sh --platform  # print Platform Mode config"
     exit 1
     ;;
 esac

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **setup.sh**: Renamed "Cloud Mode" to "Platform Mode" — `--platform` flag replaces `--cloud` (backward-compatible: `--cloud` still works)
+- **SKILL.md**: Updated "Managed cloud" section to "Temporal Cortex Platform" with Platform capabilities description
+- **BOOKING-SAFETY.md**: Consistent "Platform Mode" capitalization
+
 ## [0.5.0] - 2026-02-26
 
 ### Added

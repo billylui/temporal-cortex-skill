@@ -54,7 +54,7 @@ Exactly one booking succeeds. The other gets a clear error.
 | Lock manager | In-memory (local) | Automatic |
 | Lock manager | Redis Redlock (platform) | Set `REDIS_URLS` |
 
-> **Note:** `LOCK_TTL_SECS` and `REDIS_URLS` are **platform-mode only** environment variables used by the managed cloud deployment. Local/skill users do not need to set these — the in-memory lock manager is used automatically.
+> **Note:** `LOCK_TTL_SECS` and `REDIS_URLS` are **Platform Mode only** environment variables used by the managed Platform deployment. Local/skill users do not need to set these — the in-memory lock manager is used automatically.
 
 If a lock is not released within the TTL (process crash, network timeout), it expires automatically.
 
