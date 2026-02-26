@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-02-26
+
+### Added
+- `list_calendars` tool — new Layer 0 discovery tool returns all connected calendars with provider-prefixed IDs, names, labels, primary status, and access roles
+- Calendar labeling documentation — user-assigned labels for human-friendly calendar identification
+- `discover_calendars` MCP prompt for guided calendar discovery workflow
+- `format` parameter added to `get_availability`, `find_free_slots`, and `expand_rrule` tools
+- DST prediction fields (`dst_next_transition`, `dst_next_offset`) in `get_temporal_context` output
+
+### Changed
+- **5-step workflow**: Discover → Orient → Resolve → Query → Act (was 4-step: Orient → Resolve → Query → Act)
+- Tool count 11 → 12 (added `list_calendars`)
+- MCP prompts 3 → 4 (added `discover_calendars`)
+- TOON is now the default output format for `list_events`, `list_calendars`, `find_free_slots`, `expand_rrule`, and `get_availability` (~40% fewer tokens than JSON)
+- `list_events` default format changed from `"json"` to `"toon"`
+- MULTI-CALENDAR.md rewritten: replaced manual calendar ID guidance with `list_calendars` discovery workflow
+- Presets updated: removed explicit `format: "json"` (server TOON default applies), added `list_calendars` workflow hints
+- `setup.sh` references `cortex-mcp setup` as primary setup flow, `auth` as fallback
+
 ## [0.4.5] - 2026-02-25
 
 ### Changed
@@ -122,7 +141,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - .mcp.json for local MCP server connection
 - CI pipeline: SKILL.md validation, ShellCheck, JSON validation, link check
 
-[Unreleased]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.5...HEAD
+[Unreleased]: https://github.com/billylui/temporal-cortex-skill/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.5...v0.5.0
 [0.4.5]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.4...v0.4.5
 [0.4.4]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/billylui/temporal-cortex-skill/compare/v0.4.2...v0.4.3

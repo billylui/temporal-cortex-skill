@@ -3,21 +3,23 @@
 [![CI](https://github.com/billylui/temporal-cortex-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/billylui/temporal-cortex-skill/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**v0.4.5** · February 2026 · [Changelog](CHANGELOG.md) · **Website:** [temporal-cortex.com](https://temporal-cortex.com)
+**v0.5.0** · February 2026 · [Changelog](CHANGELOG.md) · **Website:** [temporal-cortex.com](https://temporal-cortex.com)
 
-The calendar-scheduling Agent Skill teaches AI agents the correct workflow for calendar operations using the [Temporal Cortex MCP server](https://github.com/billylui/temporal-cortex-mcp). It provides procedural knowledge for temporal orientation, natural language datetime resolution, multi-calendar availability merging, and conflict-free booking with Two-Phase Commit. Compatible with 26+ agent platforms including Claude Code, Codex CLI, and Cursor.
+The calendar-scheduling Agent Skill teaches AI agents the correct workflow for calendar operations using the [Temporal Cortex MCP server](https://github.com/billylui/temporal-cortex-mcp). It provides procedural knowledge for calendar discovery, temporal orientation, natural language datetime resolution, multi-calendar availability merging, and conflict-free booking with Two-Phase Commit. Compatible with 26+ agent platforms including Claude Code, Codex CLI, and Cursor.
 
 ## What does the calendar-scheduling skill do?
 
 This skill gives AI agents procedural knowledge for calendar operations:
 
+- **Calendar discovery** — find all connected calendars with labels and provider-prefixed IDs
 - **Temporal orientation** — always know the current time and timezone before acting
 - **Natural language resolution** — convert "next Tuesday at 2pm" to precise timestamps
 - **Multi-calendar availability** — merge free/busy across Google Calendar, Microsoft Outlook, and CalDAV
 - **Conflict-free booking** — Two-Phase Commit ensures no double-bookings
 - **RRULE expansion** — deterministic recurrence rule handling (DST, BYSETPOS, leap years)
+- **TOON output** — default format saves ~40% tokens compared to JSON
 
-The skill teaches the 4-step workflow: **orient → resolve → query → book**. Powered by [Temporal Cortex Core](https://github.com/billylui/temporal-cortex-core) (Truth Engine) and the [Temporal Cortex MCP server](https://github.com/billylui/temporal-cortex-mcp).
+The skill teaches the 5-step workflow: **discover → orient → resolve → query → act**. Powered by [Temporal Cortex Core](https://github.com/billylui/temporal-cortex-core) (Truth Engine) and the [Temporal Cortex MCP server](https://github.com/billylui/temporal-cortex-mcp).
 
 ## How do I install the calendar-scheduling skill?
 
@@ -87,7 +89,7 @@ calendar-scheduling/
 │   ├── BOOKING-SAFETY.md         # Two-Phase Commit, conflict resolution
 │   ├── MULTI-CALENDAR.md         # Provider-prefixed IDs, privacy modes
 │   ├── RRULE-GUIDE.md            # Recurrence patterns, DST edge cases
-│   └── TOOL-REFERENCE.md         # Complete schemas for all 11 tools
+│   └── TOOL-REFERENCE.md         # Complete schemas for all 12 tools
 └── assets/presets/
     ├── personal-assistant.json   # Personal scheduling preset
     ├── recruiter-agent.json      # Interview scheduling preset
@@ -104,7 +106,7 @@ Presets provide workflow hints for specific use cases:
 | Recruiter Agent | Interview coordination | 60 min |
 | Team Coordinator | Group meetings | 30 min |
 
-See [TOOL-REFERENCE.md](calendar-scheduling/references/TOOL-REFERENCE.md) for complete input/output schemas of all 11 tools.
+See [TOOL-REFERENCE.md](calendar-scheduling/references/TOOL-REFERENCE.md) for complete input/output schemas of all 12 tools.
 
 ## What tools does the MCP server expose?
 
@@ -114,6 +116,7 @@ See [TOOL-REFERENCE.md](calendar-scheduling/references/TOOL-REFERENCE.md) for co
 | 3. Availability | `get_availability` |
 | 2. Calendar Ops | `list_events`, `find_free_slots`, `expand_rrule`, `check_availability` |
 | 1. Temporal Context | `get_temporal_context`, `resolve_datetime`, `convert_timezone`, `compute_duration`, `adjust_timestamp` |
+| 0. Discovery | `list_calendars` |
 
 See [TOOL-REFERENCE.md](calendar-scheduling/references/TOOL-REFERENCE.md) for complete schemas.
 
@@ -123,9 +126,9 @@ See [TOOL-REFERENCE.md](calendar-scheduling/references/TOOL-REFERENCE.md) for co
 
 The skill follows the [Agent Skills specification](https://agentskills.io/specification) and works with Claude Code, Claude Desktop, OpenAI Codex CLI, Google Gemini CLI, GitHub Copilot, Cursor, Windsurf, and 20+ other platforms. Any tool that reads SKILL.md files can load this skill.
 
-### What is the orient-resolve-query-book workflow?
+### What is the discover-orient-resolve-query-act workflow?
 
-Every calendar interaction follows 4 steps: (1) Orient — call `get_temporal_context` to know the current time and timezone. (2) Resolve — use `resolve_datetime` to convert human language to RFC 3339 timestamps. (3) Query — use `list_events`, `find_free_slots`, or `get_availability` to check calendars. (4) Book — use `check_availability` then `book_slot` for conflict-free booking with Two-Phase Commit.
+Every calendar interaction follows 5 steps: (1) Discover — call `list_calendars` to find connected calendars and their IDs. (2) Orient — call `get_temporal_context` to know the current time and timezone. (3) Resolve — use `resolve_datetime` to convert human language to RFC 3339 timestamps. (4) Query — use `list_events`, `find_free_slots`, or `get_availability` to check calendars. (5) Act — use `check_availability` then `book_slot` for conflict-free booking with Two-Phase Commit.
 
 ### Can I use the skill without calendar credentials?
 
@@ -137,7 +140,7 @@ No. SKILL.md contains the skill definition in Agent Skills specification format 
 
 ### How does this skill relate to the MCP server?
 
-The skill provides procedural knowledge (what to do and in what order). The Model Context Protocol server provides tool execution (the actual computation and calendar API calls). Install both for optimal results: the skill teaches your AI agent the correct 4-step workflow for using the server's 11 tools effectively.
+The skill provides procedural knowledge (what to do and in what order). The Model Context Protocol server provides tool execution (the actual computation and calendar API calls). Install both for optimal results: the skill teaches your AI agent the correct 5-step workflow for using the server's 12 tools effectively.
 
 ## Where can I learn more about Temporal Cortex?
 
