@@ -1,6 +1,6 @@
 # Release workflow — creates a GitHub Release when a v* tag is pushed.
 #
-# Trigger: push a version tag (e.g., git tag v0.3.2 && git push origin v0.3.2)
+# Trigger: push a version tag (e.g., git tag v0.5.1 && git push origin v0.5.1)
 #
 # Jobs:
 #   1. validate — run all CI checks (SKILL.md, scripts, JSON, links)
@@ -27,33 +27,42 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Validate SKILL.md
+      - name: Validate all SKILL.md files
         run: bash tests/validate-skill.sh
 
-      - name: Validate structure
+      - name: Validate multi-skill structure
         run: bash tests/validate-structure.sh
 
       - name: ShellCheck
         uses: ludeeus/action-shellcheck@master
         with:
-          scandir: calendar-scheduling/scripts
+          scandir: scripts
 
       - name: Validate JSON
         run: |
-          for f in calendar-scheduling/assets/presets/*.json calendar-scheduling/.mcp.json; do
+          for f in assets/presets/*.json .mcp.json; do
             echo "Validating: $f"
-            python3 -c "import json; json.load(open('$f'))" || exit 1
+            JSON_FILE="$f" python3 -c "import json, os; json.load(open(os.environ['JSON_FILE']))" || exit 1
           done
 
       - name: Check version consistency
         run: |
           TAG_VERSION="${GITHUB_REF_NAME#v}"
-          SKILL_VERSION=$(grep -oP 'version:\s*"\K[^"]+' calendar-scheduling/SKILL.md)
+          # Check router skill version matches tag
+          SKILL_VERSION=$(grep -oP 'version:\s*"\K[^"]+' skills/temporal-cortex/SKILL.md)
           if [ "$TAG_VERSION" != "$SKILL_VERSION" ]; then
-            echo "ERROR: Tag version ($TAG_VERSION) does not match SKILL.md metadata version ($SKILL_VERSION)"
+            echo "ERROR: Tag version ($TAG_VERSION) does not match router SKILL.md version ($SKILL_VERSION)"
             exit 1
           fi
-          echo "Version $TAG_VERSION matches SKILL.md"
+          # Check all sub-skills match
+          for skill_md in skills/*/SKILL.md; do
+            SUB_VERSION=$(grep -oP 'version:\s*"\K[^"]+' "$skill_md")
+            if [ "$TAG_VERSION" != "$SUB_VERSION" ]; then
+              echo "ERROR: Tag version ($TAG_VERSION) does not match $(basename $(dirname $skill_md)) version ($SUB_VERSION)"
+              exit 1
+            fi
+          done
+          echo "Version $TAG_VERSION matches all SKILL.md files"
 
   release:
     name: Create Release
@@ -69,10 +78,8 @@ jobs:
       - name: Extract changelog entry
         id: changelog
         run: |
-          # Extract the section for this version from CHANGELOG.md
           VERSION="${{ steps.version.outputs.VERSION }}"
           BODY=$(awk "/^## \[$VERSION\]/{flag=1; next} /^## \[/{flag=0} flag" CHANGELOG.md)
-          # Write to file for gh release
           echo "$BODY" > /tmp/release-notes.md
 
       - name: Create GitHub Release
@@ -81,5 +88,5 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
           gh release create "$GITHUB_REF_NAME" \
-            --title "Agent Skill v${VERSION}" \
+            --title "Agent Skills v${VERSION}" \
             --notes-file /tmp/release-notes.md

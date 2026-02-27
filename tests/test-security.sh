@@ -4,7 +4,6 @@
 # and that user input is properly validated.
 set -euo pipefail
 
-SKILL_DIR="calendar-scheduling"
 ERRORS=0
 
 # Navigate to repo root (parent of tests/)
@@ -21,10 +20,6 @@ echo "=== Security Tests ==="
 echo ""
 echo "--- Python Env-Var Isolation ---"
 
-# Extract python3 -c blocks and check for ${...} interpolation patterns.
-# The vulnerable pattern is: python3 -c "....'${SOME_VAR}'..."
-# Safe pattern uses: os.environ['SOME_VAR']
-
 check_no_interpolation() {
   local file="$1"
   local label="$2"
@@ -34,14 +29,6 @@ check_no_interpolation() {
     return
   fi
 
-  # Check for '${...} patterns inside python3 -c blocks (may span multiple lines).
-  # Vulnerable: open('${CONFIG_FILE}'), config['tz'] = '${TIMEZONE}'
-  # Safe:       open(os.environ['CONFIG_FILE'])
-  #
-  # Strategy: look for the specific dangerous pattern where a shell variable is
-  # embedded in a Python string literal — i.e., '${VAR}' or "${VAR}" inside a
-  # python3 -c invocation. We search for lines containing both python3 and ${,
-  # or lines within multi-line python3 -c blocks that use open('${ or = '${.
   local found
   found=$(awk '
     /python3 -c/ { in_block = 1; start = NR }
@@ -57,8 +44,8 @@ check_no_interpolation() {
   fi
 }
 
-check_no_interpolation "${SKILL_DIR}/scripts/configure.sh" "configure.sh"
-check_no_interpolation "${SKILL_DIR}/scripts/status.sh" "status.sh"
+check_no_interpolation "scripts/configure.sh" "configure.sh"
+check_no_interpolation "scripts/status.sh" "status.sh"
 check_no_interpolation "tests/validate-structure.sh" "validate-structure.sh"
 
 # ---------------------------------------------------------------------------
@@ -67,20 +54,16 @@ check_no_interpolation "tests/validate-structure.sh" "validate-structure.sh"
 echo ""
 echo "--- Timezone Input Validation ---"
 
-# Verify that configure.sh contains a validation regex for timezone input.
-# The regex should reject characters outside [A-Za-z0-9/_+-].
-if grep -q '\^\\[A-Za-z0-9/_+-\\]\\+\$' "${SKILL_DIR}/scripts/configure.sh" 2>/dev/null || \
-   grep -qE 'TIMEZONE.*=~.*\^' "${SKILL_DIR}/scripts/configure.sh" 2>/dev/null; then
+if grep -q '\^\\[A-Za-z0-9/_+-\\]\\+\$' "scripts/configure.sh" 2>/dev/null || \
+   grep -qE 'TIMEZONE.*=~.*\^' "scripts/configure.sh" 2>/dev/null; then
   pass "configure.sh: timezone input validation regex present"
 else
   fail "configure.sh: no timezone input validation regex found"
 fi
 
-# Test the regex pattern itself against known inputs
 VALID_TIMEZONES=("America/New_York" "UTC" "Etc/GMT+5" "US/Eastern" "Asia/Kolkata" "Pacific/Auckland")
 INVALID_TIMEZONES=("America/'; echo pwned; '" "UTC; rm -rf /" "\`whoami\`" "US/Eastern\$(id)" "a'b" "x;y")
 
-# Extract the validation regex from configure.sh if present
 REGEX_PATTERN='^[A-Za-z0-9/_+-]+$'
 
 for tz in "${VALID_TIMEZONES[@]}"; do
@@ -105,8 +88,7 @@ done
 echo ""
 echo "--- Provider Input Validation ---"
 
-# Verify setup.sh uses a case statement that only accepts google|outlook|caldav
-if grep -q 'google|outlook|caldav)' "${SKILL_DIR}/scripts/setup.sh" 2>/dev/null; then
+if grep -q 'google|outlook|caldav)' "scripts/setup.sh" 2>/dev/null; then
   pass "setup.sh: provider restricted to google|outlook|caldav"
 else
   fail "setup.sh: provider not properly restricted"
@@ -118,15 +100,13 @@ fi
 echo ""
 echo "--- NPX Version Pinning ---"
 
-# setup.sh must use pinned version (e.g., @temporal-cortex/cortex-mcp@0.4.0)
-if grep -q '@temporal-cortex/cortex-mcp@[0-9]' "${SKILL_DIR}/scripts/setup.sh" 2>/dev/null; then
+if grep -q '@temporal-cortex/cortex-mcp@[0-9]' "scripts/setup.sh" 2>/dev/null; then
   pass "setup.sh: npx command has version pin"
 else
   fail "setup.sh: npx command missing version pin"
 fi
 
-# .mcp.json must declare universal config env vars (OAuth vars are optional, not listed)
-MCP_JSON="${SKILL_DIR}/.mcp.json"
+MCP_JSON=".mcp.json"
 for var in TIMEZONE WEEK_START; do
   if grep -q "\"${var}\"" "$MCP_JSON" 2>/dev/null; then
     pass ".mcp.json: declares ${var} env var"
@@ -135,7 +115,6 @@ for var in TIMEZONE WEEK_START; do
   fi
 done
 
-# .mcp.json must NOT include OAuth env vars (optional bring-your-own-app overrides)
 for var in GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET MICROSOFT_CLIENT_ID MICROSOFT_CLIENT_SECRET; do
   if grep -q "\"${var}\"" "$MCP_JSON" 2>/dev/null; then
     fail ".mcp.json: should not declare ${var} (optional, triggers scanner warnings)"
@@ -145,78 +124,88 @@ for var in GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET MICROSOFT_CLIENT_ID MICROSOFT_C
 done
 
 # ---------------------------------------------------------------------------
-# 5. OpenClaw registry metadata — metadata.openclaw block must be present
+# 5. OpenClaw registry metadata — check all sub-skill SKILL.md files
 # ---------------------------------------------------------------------------
 echo ""
 echo "--- OpenClaw Registry Metadata ---"
 
-SKILL_FILE="${SKILL_DIR}/SKILL.md"
+# Check the router skill (has the fullest metadata)
+SKILL_FILE="skills/temporal-cortex/SKILL.md"
 
-# Extract frontmatter (between first and second ---)
 FRONTMATTER=$(sed -n '/^---$/,/^---$/p' "$SKILL_FILE" | sed '1d;$d')
 
-# Check metadata.openclaw block exists
 if echo "$FRONTMATTER" | grep -q '^\s*openclaw:'; then
-  pass "SKILL.md: metadata.openclaw block present"
+  pass "Router SKILL.md: metadata.openclaw block present"
 else
-  fail "SKILL.md: metadata.openclaw block missing"
+  fail "Router SKILL.md: metadata.openclaw block missing"
 fi
 
-# Check requires sub-block with bins
 if echo "$FRONTMATTER" | grep -qE '^\s+bins:'; then
-  pass "SKILL.md: openclaw.requires.bins declared"
+  pass "Router SKILL.md: openclaw.requires.bins declared"
 else
-  fail "SKILL.md: openclaw.requires.bins missing"
+  fail "Router SKILL.md: openclaw.requires.bins missing"
 fi
 
 if echo "$FRONTMATTER" | grep -qF -- '- npx'; then
-  pass "SKILL.md: openclaw.requires.bins includes npx"
+  pass "Router SKILL.md: openclaw.requires.bins includes npx"
 else
-  fail "SKILL.md: openclaw.requires.bins missing npx"
+  fail "Router SKILL.md: openclaw.requires.bins missing npx"
 fi
 
-# openclaw.requires.env should NOT exist (TIMEZONE/WEEK_START are optional, auto-detected)
 OPENCLAW_SECTION=$(echo "$FRONTMATTER" | sed -n '/openclaw:/,/^[^ ]/p')
 if echo "$OPENCLAW_SECTION" | grep -qE '^\s+env:'; then
-  fail "SKILL.md: openclaw.requires.env should not exist (vars are optional)"
+  fail "Router SKILL.md: openclaw.requires.env should not exist (vars are optional)"
 else
-  pass "SKILL.md: openclaw.requires.env correctly absent"
+  pass "Router SKILL.md: openclaw.requires.env correctly absent"
 fi
 
-# primaryEnv should NOT exist (no primary credential env var)
 if echo "$FRONTMATTER" | grep -q 'primaryEnv:'; then
-  fail "SKILL.md: primaryEnv should not exist (not a credential)"
+  fail "Router SKILL.md: primaryEnv should not exist (not a credential)"
 else
-  pass "SKILL.md: primaryEnv correctly absent"
+  pass "Router SKILL.md: primaryEnv correctly absent"
 fi
 
-# OAuth vars should NOT appear anywhere in openclaw block
 for var in GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET MICROSOFT_CLIENT_ID MICROSOFT_CLIENT_SECRET; do
   if echo "$OPENCLAW_SECTION" | grep -qF -- "- ${var}"; then
-    fail "SKILL.md: openclaw block should not include ${var} (optional)"
+    fail "Router SKILL.md: openclaw block should not include ${var} (optional)"
   else
-    pass "SKILL.md: openclaw block correctly omits ${var}"
+    pass "Router SKILL.md: openclaw block correctly omits ${var}"
   fi
 done
 
 if echo "$FRONTMATTER" | grep -q 'credentials.json'; then
-  pass "SKILL.md: openclaw.requires.config includes credentials.json path"
+  pass "Router SKILL.md: openclaw.requires.config includes credentials.json path"
 else
-  fail "SKILL.md: openclaw.requires.config missing credentials.json path"
+  fail "Router SKILL.md: openclaw.requires.config missing credentials.json path"
 fi
 
-# Provenance: homepage and repository must be present
 if echo "$FRONTMATTER" | grep -qE '^\s+homepage:'; then
-  pass "SKILL.md: metadata.homepage present"
+  pass "Router SKILL.md: metadata.homepage present"
 else
-  fail "SKILL.md: metadata.homepage missing (provenance concern)"
+  fail "Router SKILL.md: metadata.homepage missing (provenance concern)"
 fi
 
 if echo "$FRONTMATTER" | grep -qE '^\s+repository:'; then
-  pass "SKILL.md: metadata.repository present"
+  pass "Router SKILL.md: metadata.repository present"
 else
-  fail "SKILL.md: metadata.repository missing (provenance concern)"
+  fail "Router SKILL.md: metadata.repository missing (provenance concern)"
 fi
+
+# Check all sub-skills have repository metadata
+for skill_dir in skills/*/; do
+  SKILL_FILE="${skill_dir}SKILL.md"
+  if [[ ! -f "$SKILL_FILE" ]]; then
+    continue
+  fi
+  SKILL_NAME=$(basename "$skill_dir")
+  FM=$(sed -n '/^---$/,/^---$/p' "$SKILL_FILE" | sed '1d;$d')
+
+  if echo "$FM" | grep -qE '^\s+repository:'; then
+    pass "${SKILL_NAME}: metadata.repository present"
+  else
+    fail "${SKILL_NAME}: metadata.repository missing"
+  fi
+done
 
 # ---------------------------------------------------------------------------
 # Summary

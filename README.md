@@ -1,55 +1,37 @@
-# Temporal Cortex Skill
+# Temporal Cortex Skills
 
 [![CI](https://github.com/temporal-cortex/skills/actions/workflows/ci.yml/badge.svg)](https://github.com/temporal-cortex/skills/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **v0.5.0** · February 2026 · [Changelog](CHANGELOG.md) · **Website:** [temporal-cortex.com](https://temporal-cortex.com)
 
-The calendar-scheduling Agent Skill teaches AI agents the correct workflow for calendar operations using the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp). It provides procedural knowledge for calendar discovery, temporal orientation, natural language datetime resolution, multi-calendar availability merging, and conflict-free booking with Two-Phase Commit. Compatible with 26+ agent platforms including Claude Code, Codex CLI, and Cursor.
+Agent Skills for AI calendar scheduling using the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp). Teaches AI agents the correct workflow for calendar discovery, temporal orientation, datetime resolution, multi-calendar availability merging, and conflict-free booking. Compatible with 26+ agent platforms.
 
-## What does the calendar-scheduling skill do?
+## Skills
 
-This skill gives AI agents procedural knowledge for calendar operations:
+| Skill | Description | Tools |
+|-------|-------------|-------|
+| [temporal-cortex](skills/temporal-cortex/SKILL.md) | Router — routes calendar intents to sub-skills | All 12 |
+| [temporal-cortex-datetime](skills/temporal-cortex-datetime/SKILL.md) | Time resolution, timezone conversion, duration math | 5 |
+| [temporal-cortex-calendars](skills/temporal-cortex-calendars/SKILL.md) | Calendar discovery, events, free slots, availability, RRULE | 7 |
+| [temporal-cortex-booking](skills/temporal-cortex-booking/SKILL.md) | Atomic booking with Two-Phase Commit | 1 |
 
-- **Calendar discovery** — find all connected calendars with labels and provider-prefixed IDs
-- **Temporal orientation** — always know the current time and timezone before acting
-- **Natural language resolution** — convert "next Tuesday at 2pm" to precise timestamps
-- **Multi-calendar availability** — merge free/busy across Google Calendar, Microsoft Outlook, and CalDAV
-- **Conflict-free booking** — Two-Phase Commit ensures no double-bookings
-- **RRULE expansion** — deterministic recurrence rule handling (DST, BYSETPOS, leap years)
-- **TOON output** — default format saves ~40% tokens compared to JSON
-
-The skill teaches the 5-step workflow: **discover → orient → resolve → query → act**. Powered by [Temporal Cortex Core](https://github.com/temporal-cortex/core) (Truth Engine) and the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp).
-
-## How do I install the calendar-scheduling skill?
-
-**Install in 3 steps:**
-
-1. **Clone the repository** — `git clone https://github.com/temporal-cortex/skills.git`
-2. **Copy to skills directory** — `cp -r temporal-cortex-skill/calendar-scheduling ~/.claude/skills/` (or your agent's skills location)
-3. **Configure MCP server** — ensure the [MCP server](https://github.com/temporal-cortex/mcp) is configured and run `npx @temporal-cortex/cortex-mcp auth google` for calendar access.
-
-### Claude Code
+## Installation
 
 ```bash
-# Clone into your skills directory
+npx skills add temporal-cortex/skills
+```
+
+Or manually:
+
+```bash
 git clone https://github.com/temporal-cortex/skills.git
-cp -r temporal-cortex-skill/calendar-scheduling ~/.claude/skills/
+cp -r skills/temporal-cortex* ~/.claude/skills/
 ```
 
-Or add as a project skill:
+## MCP Server Connection
 
-```bash
-cp -r temporal-cortex-skill/calendar-scheduling .claude/skills/
-```
-
-### Cursor / Codex CLI
-
-Copy the `calendar-scheduling/` directory to your agent's skills location. The `SKILL.md` format is supported by 26+ platforms including Claude, OpenAI Codex, Google Gemini, and GitHub Copilot.
-
-## How do I connect the MCP server?
-
-This skill requires the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp). The included `.mcp.json` points to the local npm binary:
+All skills share one MCP server. The included [.mcp.json](.mcp.json) provides the default configuration:
 
 ```json
 {
@@ -65,40 +47,50 @@ This skill requires the [Temporal Cortex MCP server](https://github.com/temporal
 Layer 1 tools (temporal context, datetime resolution) work immediately. Calendar tools require a one-time OAuth setup:
 
 ```bash
-# Google Calendar
-npx @temporal-cortex/cortex-mcp auth google
-
-# Microsoft Outlook
-npx @temporal-cortex/cortex-mcp auth outlook
-
-# CalDAV (iCloud, Fastmail)
-npx @temporal-cortex/cortex-mcp auth caldav
+npx @temporal-cortex/cortex-mcp auth google     # Google Calendar
+npx @temporal-cortex/cortex-mcp auth outlook    # Microsoft Outlook
+npx @temporal-cortex/cortex-mcp auth caldav     # CalDAV (iCloud, Fastmail)
 ```
 
-## What files are in the skill directory?
+## Repository Structure
 
 ```
-calendar-scheduling/
-├── SKILL.md                      # Core skill definition (Agent Skills spec)
-├── .mcp.json                     # MCP server connection config
-├── scripts/
-│   ├── setup.sh                  # OAuth flow + calendar connection
-│   ├── configure.sh              # Timezone + week start configuration
-│   └── status.sh                 # Connection health check
-├── references/
-│   ├── BOOKING-SAFETY.md         # Two-Phase Commit, conflict resolution
-│   ├── MULTI-CALENDAR.md         # Provider-prefixed IDs, privacy modes
-│   ├── RRULE-GUIDE.md            # Recurrence patterns, DST edge cases
-│   └── TOOL-REFERENCE.md         # Complete schemas for all 12 tools
-└── assets/presets/
-    ├── personal-assistant.json   # Personal scheduling preset
-    ├── recruiter-agent.json      # Interview scheduling preset
-    └── team-coordinator.json     # Team scheduling preset
+skills/
+├── temporal-cortex/                  # Router skill
+│   └── SKILL.md
+├── temporal-cortex-datetime/         # Time & timezone tools
+│   ├── SKILL.md
+│   └── references/DATETIME-TOOLS.md
+├── temporal-cortex-calendars/        # Calendar operations
+│   ├── SKILL.md
+│   └── references/
+│       ├── CALENDAR-TOOLS.md
+│       ├── MULTI-CALENDAR.md
+│       └── RRULE-GUIDE.md
+└── temporal-cortex-booking/          # Conflict-free booking
+    ├── SKILL.md
+    └── references/BOOKING-SAFETY.md
+scripts/                              # Shared automation
+├── setup.sh                          # OAuth + calendar connection
+├── configure.sh                      # Timezone + week start
+└── status.sh                         # Connection health check
+assets/presets/                       # Workflow presets
+├── personal-assistant.json
+├── recruiter-agent.json
+└── team-coordinator.json
 ```
 
-## What scheduling presets are available?
+## Tool Layers
 
-Presets provide workflow hints for specific use cases:
+| Layer | Tools | Skill |
+|-------|-------|-------|
+| 4. Booking | `book_slot` | booking |
+| 3. Availability | `get_availability` | calendars |
+| 2. Calendar Ops | `list_events`, `find_free_slots`, `expand_rrule`, `check_availability` | calendars |
+| 1. Temporal Context | `get_temporal_context`, `resolve_datetime`, `convert_timezone`, `compute_duration`, `adjust_timestamp` | datetime |
+| 0. Discovery | `list_calendars` | calendars |
+
+## Presets
 
 | Preset | Use Case | Default Slot |
 |--------|----------|-------------|
@@ -106,55 +98,29 @@ Presets provide workflow hints for specific use cases:
 | Recruiter Agent | Interview coordination | 60 min |
 | Team Coordinator | Group meetings | 30 min |
 
-See [TOOL-REFERENCE.md](calendar-scheduling/references/TOOL-REFERENCE.md) for complete input/output schemas of all 12 tools.
+## FAQ
 
-## What tools does the MCP server expose?
+### What agent platforms support these skills?
 
-| Layer | Tools |
-|-------|-------|
-| 4. Booking | `book_slot` |
-| 3. Availability | `get_availability` |
-| 2. Calendar Ops | `list_events`, `find_free_slots`, `expand_rrule`, `check_availability` |
-| 1. Temporal Context | `get_temporal_context`, `resolve_datetime`, `convert_timezone`, `compute_duration`, `adjust_timestamp` |
-| 0. Discovery | `list_calendars` |
+The skills follow the [Agent Skills specification](https://agentskills.io/specification) and work with Claude Code, Claude Desktop, OpenAI Codex CLI, Google Gemini CLI, GitHub Copilot, Cursor, Windsurf, and 20+ other platforms.
 
-See [TOOL-REFERENCE.md](calendar-scheduling/references/TOOL-REFERENCE.md) for complete schemas.
+### Can I use datetime skills without calendar credentials?
 
-## Frequently Asked Questions
+Yes. The `temporal-cortex-datetime` skill works immediately with zero configuration — all 5 tools are pure computation with no external API calls.
 
-### What agent platforms support this skill?
+### How do the router and sub-skills interact?
 
-The skill follows the [Agent Skills specification](https://agentskills.io/specification) and works with Claude Code, Claude Desktop, OpenAI Codex CLI, Google Gemini CLI, GitHub Copilot, Cursor, Windsurf, and 20+ other platforms. Any tool that reads SKILL.md files can load this skill.
+The router skill (`temporal-cortex`) knows the full 5-step workflow and routes to the appropriate sub-skill based on intent. For a full scheduling workflow (resolve time → check availability → book), the agent progresses through datetime → calendars → booking sub-skills.
 
-### What is the discover-orient-resolve-query-act workflow?
+## More
 
-Every calendar interaction follows 5 steps: (1) Discover — call `list_calendars` to find connected calendars and their IDs. (2) Orient — call `get_temporal_context` to know the current time and timezone. (3) Resolve — use `resolve_datetime` to convert human language to RFC 3339 timestamps. (4) Query — use `list_events`, `find_free_slots`, or `get_availability` to check calendars. (5) Act — use `check_availability` then `book_slot` for conflict-free booking with Two-Phase Commit.
-
-### Can I use the skill without calendar credentials?
-
-Yes, partially. Layer 1 tools (temporal context, datetime resolution, timezone conversion, duration computation, timestamp adjustment) work immediately with zero configuration. Calendar tools (Layers 2-4) require a one-time OAuth setup with at least one provider (Google Calendar, Microsoft Outlook, or CalDAV).
-
-### Do I need to modify SKILL.md?
-
-No. SKILL.md contains the skill definition in Agent Skills specification format and should not be edited. To customize behavior, use the preset JSON files in `assets/presets/` or modify the environment variables (`TIMEZONE`, `WEEK_START`) on the MCP server.
-
-### How does this skill relate to the MCP server?
-
-The skill provides procedural knowledge (what to do and in what order). The Model Context Protocol server provides tool execution (the actual computation and calendar API calls). Install both for optimal results: the skill teaches your AI agent the correct 5-step workflow for using the server's 12 tools effectively.
-
-## Where can I learn more about Temporal Cortex?
-
-- **[temporal-cortex-mcp](https://github.com/temporal-cortex/mcp)** — MCP server (the tool execution layer)
-- **[temporal-cortex-core](https://github.com/temporal-cortex/core)** — Truth Engine + TOON (the computation layer)
-- **[Agent Skills Specification](https://agentskills.io/specification)** — The open standard this skill follows
+- **[temporal-cortex/mcp](https://github.com/temporal-cortex/mcp)** — MCP server
+- **[temporal-cortex/core](https://github.com/temporal-cortex/core)** — Truth Engine + TOON
+- **[Agent Skills Specification](https://agentskills.io/specification)** — The open standard these skills follow
 
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Security
-
-See [SECURITY.md](SECURITY.md).
 
 ## License
 

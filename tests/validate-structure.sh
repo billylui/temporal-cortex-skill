@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-# validate-structure.sh — Validates the skill directory structure and file integrity
+# validate-structure.sh — Validates the multi-skill directory structure and file integrity
 set -euo pipefail
 
-SKILL_DIR="calendar-scheduling"
 ERRORS=0
 
 # Navigate to repo root (parent of tests/)
@@ -11,57 +10,111 @@ cd "$(dirname "$0")/.."
 pass() { echo "  PASS: $1"; }
 fail() { echo "  FAIL: $1"; ERRORS=$((ERRORS + 1)); }
 
-echo "=== Validating Directory Structure ==="
+echo "=== Validating Multi-Skill Directory Structure ==="
 
-# 1. Required directories
-for dir in \
-  "${SKILL_DIR}/scripts" \
-  "${SKILL_DIR}/references" \
-  "${SKILL_DIR}/assets/presets"; do
+# 1. Required skill directories
+SKILL_DIRS=(
+  "skills/temporal-cortex"
+  "skills/temporal-cortex-datetime"
+  "skills/temporal-cortex-calendars"
+  "skills/temporal-cortex-booking"
+)
+
+for dir in "${SKILL_DIRS[@]}"; do
   if [[ -d "$dir" ]]; then
-    pass "Directory exists: ${dir}"
+    pass "Skill directory exists: ${dir}"
   else
-    fail "Missing directory: ${dir}"
+    fail "Missing skill directory: ${dir}"
+  fi
+done
+
+# 2. Required shared directories
+for dir in "scripts" "assets/presets"; do
+  if [[ -d "$dir" ]]; then
+    pass "Shared directory exists: ${dir}"
+  else
+    fail "Missing shared directory: ${dir}"
   fi
 done
 
 echo ""
 echo "=== Validating Required Files ==="
 
-# 2. Required files
-REQUIRED_FILES=(
-  "${SKILL_DIR}/SKILL.md"
-  "${SKILL_DIR}/.mcp.json"
-  "${SKILL_DIR}/scripts/setup.sh"
-  "${SKILL_DIR}/scripts/configure.sh"
-  "${SKILL_DIR}/scripts/status.sh"
-  "${SKILL_DIR}/references/BOOKING-SAFETY.md"
-  "${SKILL_DIR}/references/MULTI-CALENDAR.md"
-  "${SKILL_DIR}/references/RRULE-GUIDE.md"
-  "${SKILL_DIR}/references/TOOL-REFERENCE.md"
-  "${SKILL_DIR}/assets/presets/personal-assistant.json"
-  "${SKILL_DIR}/assets/presets/recruiter-agent.json"
-  "${SKILL_DIR}/assets/presets/team-coordinator.json"
+# 3. Each skill has a SKILL.md
+for dir in "${SKILL_DIRS[@]}"; do
+  if [[ -f "${dir}/SKILL.md" ]]; then
+    pass "SKILL.md exists: ${dir}/SKILL.md"
+  else
+    fail "Missing SKILL.md: ${dir}/SKILL.md"
+  fi
+done
+
+# 4. Root files
+ROOT_FILES=(".mcp.json" "AGENTS.md")
+for f in "${ROOT_FILES[@]}"; do
+  if [[ -f "$f" ]]; then
+    pass "Root file exists: ${f}"
+  else
+    fail "Missing root file: ${f}"
+  fi
+done
+
+# 5. Reference documents in correct sub-skills
+REFERENCE_FILES=(
+  "skills/temporal-cortex-datetime/references/DATETIME-TOOLS.md"
+  "skills/temporal-cortex-calendars/references/CALENDAR-TOOLS.md"
+  "skills/temporal-cortex-calendars/references/MULTI-CALENDAR.md"
+  "skills/temporal-cortex-calendars/references/RRULE-GUIDE.md"
+  "skills/temporal-cortex-booking/references/BOOKING-SAFETY.md"
 )
 
-for f in "${REQUIRED_FILES[@]}"; do
+for f in "${REFERENCE_FILES[@]}"; do
   if [[ -f "$f" ]]; then
-    pass "File exists: ${f}"
+    pass "Reference exists: ${f}"
   else
-    fail "Missing file: ${f}"
+    fail "Missing reference: ${f}"
+  fi
+done
+
+# 6. Shared scripts
+SCRIPT_FILES=(
+  "scripts/setup.sh"
+  "scripts/configure.sh"
+  "scripts/status.sh"
+)
+
+for f in "${SCRIPT_FILES[@]}"; do
+  if [[ -f "$f" ]]; then
+    pass "Script exists: ${f}"
+  else
+    fail "Missing script: ${f}"
+  fi
+done
+
+# 7. Preset files
+PRESET_FILES=(
+  "assets/presets/personal-assistant.json"
+  "assets/presets/recruiter-agent.json"
+  "assets/presets/team-coordinator.json"
+)
+
+for f in "${PRESET_FILES[@]}"; do
+  if [[ -f "$f" ]]; then
+    pass "Preset exists: ${f}"
+  else
+    fail "Missing preset: ${f}"
   fi
 done
 
 echo ""
 echo "=== Validating Scripts ==="
 
-# 3. Scripts have shebangs and are executable
-for script in "${SKILL_DIR}"/scripts/*.sh; do
+# 8. Scripts have shebangs
+for script in scripts/*.sh; do
   if [[ ! -f "$script" ]]; then
     continue
   fi
 
-  # Check shebang
   FIRST_LINE=$(head -n 1 "$script")
   if [[ "$FIRST_LINE" == "#!/usr/bin/env bash" ]] || [[ "$FIRST_LINE" == "#!/bin/bash" ]]; then
     pass "Shebang present: ${script}"
@@ -69,11 +122,9 @@ for script in "${SKILL_DIR}"/scripts/*.sh; do
     fail "Missing or invalid shebang in ${script} (got: ${FIRST_LINE})"
   fi
 
-  # Check executable (git tracks this; skip on fresh checkout if not set)
   if [[ -x "$script" ]]; then
     pass "Executable: ${script}"
   else
-    # Not a hard failure — CI sets executable via git update-index
     echo "  WARN: Not executable: ${script} (set with: chmod +x ${script})"
   fi
 done
@@ -81,8 +132,8 @@ done
 echo ""
 echo "=== Validating JSON Files ==="
 
-# 4. JSON files are valid
-for json_file in "${SKILL_DIR}"/assets/presets/*.json "${SKILL_DIR}"/.mcp.json; do
+# 9. JSON files are valid
+for json_file in assets/presets/*.json .mcp.json; do
   if [[ ! -f "$json_file" ]]; then
     continue
   fi
@@ -97,18 +148,22 @@ done
 echo ""
 echo "=== Validating File Sizes ==="
 
-# 5. SKILL.md body < 500 lines (total file can be longer due to frontmatter)
-if [[ -f "${SKILL_DIR}/SKILL.md" ]]; then
-  TOTAL_LINES=$(wc -l < "${SKILL_DIR}/SKILL.md" | tr -d ' ')
-  if [[ $TOTAL_LINES -lt 520 ]]; then
-    pass "SKILL.md total ${TOTAL_LINES} lines (within budget)"
-  else
-    fail "SKILL.md has ${TOTAL_LINES} lines (body should be < 500)"
+# 10. All SKILL.md body < 500 lines
+for skill_md in skills/*/SKILL.md; do
+  if [[ ! -f "$skill_md" ]]; then
+    continue
   fi
-fi
 
-# 6. Reference files should be focused (< 300 lines each)
-for ref in "${SKILL_DIR}"/references/*.md; do
+  TOTAL_LINES=$(wc -l < "$skill_md" | tr -d ' ')
+  if [[ $TOTAL_LINES -lt 520 ]]; then
+    pass "${skill_md} total ${TOTAL_LINES} lines (within budget)"
+  else
+    fail "${skill_md} has ${TOTAL_LINES} lines (body should be < 500)"
+  fi
+done
+
+# 11. Reference files should be focused (< 300 lines each)
+for ref in skills/*/references/*.md; do
   if [[ ! -f "$ref" ]]; then
     continue
   fi
