@@ -7,7 +7,7 @@ compatibility: |-
   Requires npx (Node.js 18+) for the MCP server. No OAuth or credentials needed — all tools are pure computation. Works with Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client.
 metadata:
   author: temporal-cortex
-  version: "0.5.1"
+  version: "0.5.2"
   mcp-server: "@temporal-cortex/cortex-mcp"
   homepage: "https://temporal-cortex.com"
   repository: "https://github.com/temporal-cortex/skills"

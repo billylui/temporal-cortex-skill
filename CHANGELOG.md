@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-02-27
+
+### Changed
+- Version bump for MCP Registry OIDC namespace casing fix
+
 ## [0.5.1] - 2026-02-27
 
 ### Added
@@ -154,7 +159,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - .mcp.json for local MCP server connection
 - CI pipeline: SKILL.md validation, ShellCheck, JSON validation, link check
 
-[Unreleased]: https://github.com/temporal-cortex/skills/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/temporal-cortex/skills/compare/v0.5.2...HEAD
+[0.5.2]: https://github.com/temporal-cortex/skills/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/temporal-cortex/skills/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/temporal-cortex/skills/compare/v0.4.5...v0.5.0
 [0.4.5]: https://github.com/temporal-cortex/skills/compare/v0.4.4...v0.4.5
