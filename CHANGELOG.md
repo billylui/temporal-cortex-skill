@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.6] - 2026-02-28
+
+### Fixed
+- **scanner**: Updated verification lines in all 3 SKILL.md Runtime sections — replaced SLSA provenance claim (requires public repo) with SHA256 checksum references and postinstall verification; linked to public MCP repo instead of private Platform repo
+- **links**: Removed npmjs.com provenance URL ignore pattern from link-check config (URL no longer referenced)
+
 ## [0.5.5] - 2026-02-28
 
 ### Added
-- **supply-chain**: Added npm SLSA provenance verification links and SHA256 checksum references to all 3 SKILL.md Runtime sections — addresses OpenClaw INSTALL MECHANISM "no verified release artifact" flag
+- **supply-chain**: Added SHA256 checksum references to all 3 SKILL.md Runtime sections — addresses OpenClaw INSTALL MECHANISM "no verified release artifact" flag
 
 ### Changed
 - **scanner**: Moved Platform Mode config (TC_API_KEY + mcp.temporal-cortex.com endpoint) from router SKILL.md body to MCP repo README reference — removes "data exfiltration" Code insights flag

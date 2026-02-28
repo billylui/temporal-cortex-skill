@@ -7,7 +7,7 @@ compatibility: |-
   Requires npx (Node.js 18+) to download and run the MCP server binary from npm. No OAuth or credentials needed — all 5 tools are pure local computation after server startup. Works with Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client.
 metadata:
   author: temporal-cortex
-  version: "0.5.5"
+  version: "0.5.6"
   mcp-server: "@temporal-cortex/cortex-mcp"
   homepage: "https://temporal-cortex.com"
   repository: "https://github.com/temporal-cortex/skills"
@@ -33,10 +33,10 @@ metadata:
 
 ## Runtime
 
-These tools run inside the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp) (`@temporal-cortex/cortex-mcp@0.5.5`), a compiled Rust binary distributed as an npm package.
+These tools run inside the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp) (`@temporal-cortex/cortex-mcp@0.5.6`), a compiled Rust binary distributed as an npm package.
 
 **What happens at startup:**
-1. `npx` downloads `@temporal-cortex/cortex-mcp@0.5.5` from the npm registry (one-time, cached locally)
+1. `npx` downloads `@temporal-cortex/cortex-mcp@0.5.6` from the npm registry (one-time, cached locally)
 2. The MCP server starts as a local process communicating over stdio
 3. All 5 datetime tools execute as pure local computation — no external API calls after startup
 

@@ -3,7 +3,7 @@
 [![CI](https://github.com/temporal-cortex/skills/actions/workflows/ci.yml/badge.svg)](https://github.com/temporal-cortex/skills/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**v0.5.5** · February 2026 · [Changelog](CHANGELOG.md) · **Website:** [temporal-cortex.com](https://temporal-cortex.com)
+**v0.5.6** · February 2026 · [Changelog](CHANGELOG.md) · **Website:** [temporal-cortex.com](https://temporal-cortex.com)
 
 Agent Skills for AI calendar scheduling using the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp). Teaches AI agents the correct workflow for calendar discovery, temporal orientation, datetime resolution, multi-calendar availability merging, and conflict-free booking. Compatible with 26+ agent platforms.
 
@@ -37,7 +37,7 @@ All skills share one MCP server. The included [.mcp.json](.mcp.json) provides th
   "mcpServers": {
     "temporal-cortex": {
       "command": "npx",
-      "args": ["-y", "@temporal-cortex/cortex-mcp@0.5.5"]
+      "args": ["-y", "@temporal-cortex/cortex-mcp@0.5.6"]
     }
   }
 }
@@ -46,9 +46,9 @@ All skills share one MCP server. The included [.mcp.json](.mcp.json) provides th
 Layer 1 tools (temporal context, datetime resolution) work immediately. Calendar tools require a one-time OAuth setup:
 
 ```bash
-npx @temporal-cortex/cortex-mcp@0.5.5 auth google     # Google Calendar
-npx @temporal-cortex/cortex-mcp@0.5.5 auth outlook    # Microsoft Outlook
-npx @temporal-cortex/cortex-mcp@0.5.5 auth caldav     # CalDAV (iCloud, Fastmail)
+npx @temporal-cortex/cortex-mcp@0.5.6 auth google     # Google Calendar
+npx @temporal-cortex/cortex-mcp@0.5.6 auth outlook    # Microsoft Outlook
+npx @temporal-cortex/cortex-mcp@0.5.6 auth caldav     # CalDAV (iCloud, Fastmail)
 ```
 
 ## Repository Structure

@@ -70,13 +70,13 @@ echo "This will guide you through calendar connection and configuration."
 echo ""
 
 # Prefer `setup` (interactive guided setup), fall back to `auth` for provider-specific flow
-if npx -y @temporal-cortex/cortex-mcp@0.5.5 setup 2>/dev/null; then
+if npx -y @temporal-cortex/cortex-mcp@0.5.6 setup 2>/dev/null; then
   : # setup succeeded
 else
   echo "Falling back to provider-specific auth flow..."
   echo "This will open your browser for calendar access consent."
   echo ""
-  npx -y @temporal-cortex/cortex-mcp@0.5.5 auth "$PROVIDER"
+  npx -y @temporal-cortex/cortex-mcp@0.5.6 auth "$PROVIDER"
 fi
 
 # Verify credentials
