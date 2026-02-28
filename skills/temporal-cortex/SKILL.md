@@ -80,7 +80,7 @@ All sub-skills share the [Temporal Cortex MCP server](https://github.com/tempora
 
 **Credential storage:** OAuth tokens are stored and used locally at `~/.config/temporal-cortex/credentials.json` — never sent to Temporal Cortex servers.
 
-**Verification:** Package provenance is attested via [npm SLSA](https://www.npmjs.com/package/@temporal-cortex/cortex-mcp#provenance). Source: [github.com/temporal-cortex/platform](https://github.com/temporal-cortex/platform) (Rust, MIT-licensed). SHA256 checksums published with each [GitHub Release](https://github.com/temporal-cortex/mcp/releases).
+**Verification:** SHA256 checksums are published with each [GitHub Release](https://github.com/temporal-cortex/mcp/releases) and embedded in the npm package for automatic postinstall verification. Source: [github.com/temporal-cortex/mcp](https://github.com/temporal-cortex/mcp) (MIT-licensed).
 
 See [.mcp.json](https://github.com/temporal-cortex/skills/blob/main/.mcp.json) for the default configuration:
 

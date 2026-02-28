@@ -44,7 +44,7 @@ These tools run inside the [Temporal Cortex MCP server](https://github.com/tempo
 
 **No credentials required.** Unlike the scheduling skill, this skill needs no OAuth tokens or API keys.
 
-**Verification:** Package provenance is attested via [npm SLSA](https://www.npmjs.com/package/@temporal-cortex/cortex-mcp#provenance). Source: [github.com/temporal-cortex/platform](https://github.com/temporal-cortex/platform) (Rust, MIT-licensed). SHA256 checksums published with each [GitHub Release](https://github.com/temporal-cortex/mcp/releases).
+**Verification:** SHA256 checksums are published with each [GitHub Release](https://github.com/temporal-cortex/mcp/releases) and embedded in the npm package for automatic postinstall verification. Source: [github.com/temporal-cortex/mcp](https://github.com/temporal-cortex/mcp) (MIT-licensed).
 
 ## Critical Rules
 
