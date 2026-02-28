@@ -32,8 +32,8 @@ This is the router skill for Temporal Cortex calendar operations. It routes your
 
 | Sub-Skill | When to Use | Tools |
 |-----------|------------|-------|
-| [temporal-cortex-datetime](../temporal-cortex-datetime/SKILL.md) | Time resolution, timezone conversion, duration math. Zero-setup — no credentials needed. | 5 tools (Layer 1) |
-| [temporal-cortex-scheduling](../temporal-cortex-scheduling/SKILL.md) | List calendars, events, free slots, availability, RRULE expansion, and booking. Requires OAuth credentials. | 8 tools (Layers 0-4) |
+| [temporal-cortex-datetime](https://github.com/temporal-cortex/skills/blob/main/skills/temporal-cortex-datetime/SKILL.md) | Time resolution, timezone conversion, duration math. Zero-setup — no credentials needed. | 5 tools (Layer 1) |
+| [temporal-cortex-scheduling](https://github.com/temporal-cortex/skills/blob/main/skills/temporal-cortex-scheduling/SKILL.md) | List calendars, events, free slots, availability, RRULE expansion, and booking. Requires OAuth credentials. | 8 tools (Layers 0-4) |
 
 ## Routing Table
 
@@ -70,7 +70,7 @@ Every calendar interaction follows this 5-step pattern:
 
 ## MCP Server Connection
 
-All sub-skills share the same MCP server. See [.mcp.json](../../.mcp.json) for the default configuration.
+All sub-skills share the same MCP server. See [.mcp.json](https://github.com/temporal-cortex/skills/blob/main/.mcp.json) for the default configuration.
 
 **Local mode** (default):
 ```json
@@ -96,4 +96,4 @@ All sub-skills share the same MCP server. See [.mcp.json](../../.mcp.json) for t
 }
 ```
 
-Layer 1 tools work immediately with zero configuration. Calendar tools require a one-time OAuth setup — run the [setup script](../../scripts/setup.sh) or `npx @temporal-cortex/cortex-mcp auth google`.
+Layer 1 tools work immediately with zero configuration. Calendar tools require a one-time OAuth setup — run the [setup script](https://github.com/temporal-cortex/skills/blob/main/scripts/setup.sh) or `npx @temporal-cortex/cortex-mcp auth google`.

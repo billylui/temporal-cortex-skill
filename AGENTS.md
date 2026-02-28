@@ -19,7 +19,7 @@ All skills share one MCP server: `@temporal-cortex/cortex-mcp`
   "mcpServers": {
     "temporal-cortex": {
       "command": "npx",
-      "args": ["-y", "@temporal-cortex/cortex-mcp@0.5.2"]
+      "args": ["-y", "@temporal-cortex/cortex-mcp@0.5.3"]
     }
   }
 }
