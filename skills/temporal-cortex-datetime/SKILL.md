@@ -7,7 +7,7 @@ compatibility: |-
   Requires npx (Node.js 18+) to download and run the MCP server binary from npm. No OAuth or credentials needed — all 5 tools are pure local computation after server startup. Works with Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client.
 metadata:
   author: temporal-cortex
-  version: "0.5.4"
+  version: "0.5.5"
   mcp-server: "@temporal-cortex/cortex-mcp"
   homepage: "https://temporal-cortex.com"
   repository: "https://github.com/temporal-cortex/skills"
@@ -33,16 +33,18 @@ metadata:
 
 ## Runtime
 
-These tools run inside the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp) (`@temporal-cortex/cortex-mcp@0.5.4`), a compiled Rust binary distributed as an npm package.
+These tools run inside the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp) (`@temporal-cortex/cortex-mcp@0.5.5`), a compiled Rust binary distributed as an npm package.
 
 **What happens at startup:**
-1. `npx` downloads `@temporal-cortex/cortex-mcp@0.5.4` from the npm registry (one-time, cached locally)
+1. `npx` downloads `@temporal-cortex/cortex-mcp@0.5.5` from the npm registry (one-time, cached locally)
 2. The MCP server starts as a local process communicating over stdio
 3. All 5 datetime tools execute as pure local computation — no external API calls after startup
 
 **Network access:** Only during the initial npm download. Once cached, subsequent launches are offline-capable. The tools themselves make zero network requests.
 
 **No credentials required.** Unlike the scheduling skill, this skill needs no OAuth tokens or API keys.
+
+**Verification:** Package provenance is attested via [npm SLSA](https://www.npmjs.com/package/@temporal-cortex/cortex-mcp#provenance). Source: [github.com/temporal-cortex/platform](https://github.com/temporal-cortex/platform) (Rust, MIT-licensed). SHA256 checksums published with each [GitHub Release](https://github.com/temporal-cortex/mcp/releases).
 
 ## Critical Rules
 

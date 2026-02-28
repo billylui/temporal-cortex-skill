@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.5] - 2026-02-28
+
+### Added
+- **supply-chain**: Added npm SLSA provenance verification links and SHA256 checksum references to all 3 SKILL.md Runtime sections — addresses OpenClaw INSTALL MECHANISM "no verified release artifact" flag
+
+### Changed
+- **scanner**: Moved Platform Mode config (TC_API_KEY + mcp.temporal-cortex.com endpoint) from router SKILL.md body to MCP repo README reference — removes "data exfiltration" Code insights flag
+- **scanner**: Simplified credential language in router and scheduling Runtime sections: "never sent to Temporal Cortex servers" (removed "unless you opt into Platform Mode" qualifier)
+
 ## [0.5.4] - 2026-02-28
 
 ### Added
