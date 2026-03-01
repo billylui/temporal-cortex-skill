@@ -75,13 +75,13 @@ Each provider requires a one-time authentication:
 
 ```bash
 # Google Calendar (OAuth2, browser-based consent)
-npx @temporal-cortex/cortex-mcp@0.5.6 auth google
+npx @temporal-cortex/cortex-mcp@0.5.7 auth google
 
 # Microsoft Outlook (Azure AD OAuth2 with PKCE)
-npx @temporal-cortex/cortex-mcp@0.5.6 auth outlook
+npx @temporal-cortex/cortex-mcp@0.5.7 auth outlook
 
 # CalDAV (app-specific password, presets for iCloud/Fastmail)
-npx @temporal-cortex/cortex-mcp@0.5.6 auth caldav
+npx @temporal-cortex/cortex-mcp@0.5.7 auth caldav
 ```
 
 Credentials are stored locally at `~/.config/temporal-cortex/credentials.json`. Provider registrations are saved in `~/.config/temporal-cortex/config.json`.

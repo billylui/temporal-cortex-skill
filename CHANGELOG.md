@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.7] - 2026-03-01
+
+### Security
+- **transparency**: Added `File access` scope documentation to all 3 SKILL.md files — explicitly declares which filesystem paths the binary reads/writes
+- **transparency**: Added `Network scope` documentation to router and scheduling SKILL.md files, strengthened `Network access` in datetime SKILL.md — explicitly lists which endpoints the binary contacts (only user-configured calendar providers, no callbacks)
+- **transparency**: Added `Docker containment` option to all 3 SKILL.md files — provides MCP config JSON for running the server in an isolated container
+- **transparency**: Added build provenance link (GitHub Actions CI) to all 3 SKILL.md Verification sections — enables independent build audit
+- **verification**: Added manual `curl` command for SHA256 checksum verification to all 3 SKILL.md files — addresses VirusTotal supply chain risk finding and OpenClaw "verify the published SHA256" recommendation
+
+### Added
+- **ci**: Added security transparency assertions to `test-security.sh` — validates file access scope, network scope, Docker containment, build provenance, and SHA256SUMS.txt reference in all SKILL.md files
+- **ci**: Added verification URL version pinning check to `test-security.sh` — ensures `curl` commands in SKILL.md files reference pinned release versions
+
+### Changed
+- **docs**: Added "How do I verify the installation?" section to MCP README with manual verification commands, build provenance details, and Docker containment instructions
+
 ## [0.5.6] - 2026-02-28
 
 ### Fixed
@@ -195,7 +211,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - .mcp.json for local MCP server connection
 - CI pipeline: SKILL.md validation, ShellCheck, JSON validation, link check
 
-[Unreleased]: https://github.com/temporal-cortex/skills/compare/v0.5.3...HEAD
+[Unreleased]: https://github.com/temporal-cortex/skills/compare/v0.5.7...HEAD
+[0.5.7]: https://github.com/temporal-cortex/skills/compare/v0.5.6...v0.5.7
+[0.5.6]: https://github.com/temporal-cortex/skills/compare/v0.5.5...v0.5.6
+[0.5.5]: https://github.com/temporal-cortex/skills/compare/v0.5.4...v0.5.5
+[0.5.4]: https://github.com/temporal-cortex/skills/compare/v0.5.3...v0.5.4
 [0.5.3]: https://github.com/temporal-cortex/skills/compare/v0.5.2...v0.5.3
 [0.5.2]: https://github.com/temporal-cortex/skills/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/temporal-cortex/skills/compare/v0.5.0...v0.5.1

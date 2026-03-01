@@ -157,7 +157,75 @@ for skill_md in skills/*/SKILL.md skills/*/references/*.md README.md; do
 done
 
 # ---------------------------------------------------------------------------
-# 5. OpenClaw registry metadata — check all sub-skill SKILL.md files
+# 5. Security transparency — all SKILL.md files must document scope
+# ---------------------------------------------------------------------------
+echo ""
+echo "--- Security Transparency ---"
+
+for skill_dir in skills/*/; do
+  SKILL_FILE="${skill_dir}SKILL.md"
+  if [[ ! -f "$SKILL_FILE" ]]; then
+    continue
+  fi
+  SKILL_NAME=$(basename "$skill_dir")
+
+  if grep -q 'File access:' "$SKILL_FILE" 2>/dev/null; then
+    pass "${SKILL_NAME}: file access scope documented"
+  else
+    fail "${SKILL_NAME}: missing file access scope documentation"
+  fi
+
+  if grep -q 'Network' "$SKILL_FILE" 2>/dev/null && grep -qE '(Network scope|Network access):' "$SKILL_FILE" 2>/dev/null; then
+    pass "${SKILL_NAME}: network scope documented"
+  else
+    fail "${SKILL_NAME}: missing network scope documentation"
+  fi
+
+  if grep -q 'Docker containment' "$SKILL_FILE" 2>/dev/null; then
+    pass "${SKILL_NAME}: Docker containment option documented"
+  else
+    fail "${SKILL_NAME}: missing Docker containment documentation"
+  fi
+
+  if grep -q 'GitHub Actions' "$SKILL_FILE" 2>/dev/null; then
+    pass "${SKILL_NAME}: build provenance (GitHub Actions) linked"
+  else
+    fail "${SKILL_NAME}: missing build provenance link"
+  fi
+
+  if grep -q 'SHA256SUMS.txt' "$SKILL_FILE" 2>/dev/null; then
+    pass "${SKILL_NAME}: SHA256SUMS.txt verification referenced"
+  else
+    fail "${SKILL_NAME}: missing SHA256SUMS.txt reference"
+  fi
+done
+
+# ---------------------------------------------------------------------------
+# 5b. Verification URL version pinning — curl commands must have pinned version
+# ---------------------------------------------------------------------------
+echo ""
+echo "--- Verification URL Version Pinning ---"
+
+for skill_md in skills/*/SKILL.md; do
+  if [[ ! -f "$skill_md" ]]; then
+    continue
+  fi
+
+  LABEL="$skill_md"
+
+  UNPINNED_CURL=$(grep -n 'mcp-v.*SHA256SUMS' "$skill_md" | grep -v 'mcp-v[0-9]' || true)
+  if [[ -n "$UNPINNED_CURL" ]]; then
+    fail "${LABEL}: unpinned version in SHA256SUMS.txt verification URL"
+    echo "       ${UNPINNED_CURL}"
+  else
+    if grep -q 'mcp-v.*SHA256SUMS' "$skill_md" 2>/dev/null; then
+      pass "${LABEL}: verification URL has pinned version"
+    fi
+  fi
+done
+
+# ---------------------------------------------------------------------------
+# 6. OpenClaw registry metadata — check all sub-skill SKILL.md files
 # ---------------------------------------------------------------------------
 echo ""
 echo "--- OpenClaw Registry Metadata ---"
