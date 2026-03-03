@@ -7,7 +7,7 @@ compatibility: |-
   Requires npx (Node.js 18+) to download and run the MCP server binary from npm. No OAuth or credentials needed — all 5 tools are pure local computation after server startup. Works with Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client.
 metadata:
   author: temporal-cortex
-  version: "0.5.8"
+  version: "0.5.9"
   mcp-server: "@temporal-cortex/cortex-mcp"
   homepage: "https://temporal-cortex.com"
   repository: "https://github.com/temporal-cortex/skills"
@@ -33,12 +33,13 @@ metadata:
 
 ## Runtime
 
-These tools run inside the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp) (`@temporal-cortex/cortex-mcp@0.5.8`), a compiled Rust binary distributed as an npm package.
+These tools run inside the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp) (`@temporal-cortex/cortex-mcp@0.5.9`), a compiled Rust binary distributed as an npm package.
 
-**What happens at startup:**
-1. `npx` downloads `@temporal-cortex/cortex-mcp@0.5.8` from the npm registry (one-time, cached locally)
-2. The MCP server starts as a local process communicating over stdio
-3. All 5 datetime tools execute as pure local computation — no external API calls after startup
+**What happens at startup (npx):**
+1. `npx` downloads `@temporal-cortex/cortex-mcp@0.5.9` from the npm registry (one-time, cached locally)
+2. The postinstall script verifies the binary's SHA256 checksum against the embedded `checksums.json` — **fails on mismatch**
+3. The MCP server starts as a local process communicating over stdio
+4. All 5 datetime tools execute as pure local computation — zero network access, zero filesystem writes, no credentials
 
 **Network access:** Only during the initial npm download. Once cached, subsequent launches are fully offline. The 5 datetime tools make zero network requests — all computation is local.
 
@@ -46,15 +47,28 @@ These tools run inside the [Temporal Cortex MCP server](https://github.com/tempo
 
 **No credentials required.** Unlike the scheduling skill, this skill needs no OAuth tokens or API keys.
 
-**Verification:** SHA256 checksums are published with each [GitHub Release](https://github.com/temporal-cortex/mcp/releases) (`SHA256SUMS.txt`) and embedded in the npm package for automatic postinstall verification. Verify manually:
+**Verification pipeline:** The npm package embeds `checksums.json` containing SHA256 hashes for all platform binaries. During `npm install`, the postinstall script downloads the platform-specific binary and compares its SHA256 hash against the expected checksum. **On mismatch, installation fails with an error** — the binary is not installed. Checksums are also published with each [GitHub Release](https://github.com/temporal-cortex/mcp/releases) (`SHA256SUMS.txt`) for independent verification:
 
 ```bash
-curl -sL https://github.com/temporal-cortex/mcp/releases/download/mcp-v0.5.8/SHA256SUMS.txt
+curl -sL https://github.com/temporal-cortex/mcp/releases/download/mcp-v0.5.9/SHA256SUMS.txt
 ```
 
-Source: [github.com/temporal-cortex/mcp](https://github.com/temporal-cortex/mcp) (MIT-licensed). Binaries are built in [GitHub Actions](https://github.com/temporal-cortex/mcp/actions) from auditable Rust source.
+**Build provenance:** Binaries are cross-compiled from auditable Rust source in [GitHub Actions](https://github.com/temporal-cortex/mcp/actions) across 5 platforms (darwin-arm64, darwin-x64, linux-x64, linux-arm64, win32-x64). Source: [github.com/temporal-cortex/mcp](https://github.com/temporal-cortex/mcp) (MIT-licensed).
 
-**Docker containment:** Run in a container for full isolation — see the [router skill](https://github.com/temporal-cortex/skills/blob/main/skills/temporal-cortex/SKILL.md#mcp-server-connection) for Docker configuration.
+**Docker containment** (zero Node.js dependency, no host filesystem access):
+
+```json
+{
+  "mcpServers": {
+    "temporal-cortex": {
+      "command": "docker",
+      "args": ["run", "--rm", "-i", "cortex-mcp"]
+    }
+  }
+}
+```
+
+Build: `docker build -t cortex-mcp https://github.com/temporal-cortex/mcp.git` — No volume mount needed since the datetime skill requires no OAuth tokens or credential files.
 
 ## Critical Rules
 

@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.9] - 2026-03-03
+
+### Security
+- **scanner**: Removed `anyBins: [python3, docker]` from openclaw metadata in router and scheduling SKILL.md — scanner flagged these as required dependencies when both are optional (`python3` only used by configure.sh, `docker` is an isolation option)
+- **scanner**: Strengthened verification documentation in all 3 SKILL.md files — explicitly names `checksums.json`, describes automated postinstall SHA256 verification, and states **fails on mismatch** behavior (addresses OpenClaw "manual/suggested, not enforced" finding)
+- **scanner**: Added SHA256 verification step to startup sequences in all 3 SKILL.md files — makes the checksum pipeline visible in the primary workflow description
+- **scanner**: Elevated Docker containment with inline JSON configs in all 3 SKILL.md files — datetime config shown without volume mount (needs no credentials), scheduling/router with credential mount
+- **scanner**: Strengthened credential storage language in router and scheduling SKILL.md — provides verifiable evidence paths (open-source code link, Docker mount isolation) instead of prose-only assertions
+
+### Added
+- **ci**: Added `anyBins` regression guard to `test-security.sh` — prevents reintroduction of `anyBins` in openclaw metadata
+
 ## [0.5.8] - 2026-03-01
 
 ### Fixed

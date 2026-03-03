@@ -309,6 +309,27 @@ for skill_dir in skills/*/; do
 done
 
 # ---------------------------------------------------------------------------
+# 7. OpenClaw anyBins guard — no skill should declare anyBins
+# ---------------------------------------------------------------------------
+echo ""
+echo "--- OpenClaw anyBins Guard ---"
+
+for skill_dir in skills/*/; do
+  SKILL_FILE="${skill_dir}SKILL.md"
+  if [[ ! -f "$SKILL_FILE" ]]; then
+    continue
+  fi
+  SKILL_NAME=$(basename "$skill_dir")
+  FM=$(sed -n '/^---$/,/^---$/p' "$SKILL_FILE" | sed '1d;$d')
+
+  if echo "$FM" | grep -q 'anyBins:'; then
+    fail "${SKILL_NAME}: openclaw.requires.anyBins should not exist (python3 and docker are optional, not required)"
+  else
+    pass "${SKILL_NAME}: no anyBins declared"
+  fi
+done
+
+# ---------------------------------------------------------------------------
 # Summary
 # ---------------------------------------------------------------------------
 echo ""
