@@ -30,10 +30,10 @@ metadata:
 
 ## Runtime
 
-These tools run inside the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp) (`@temporal-cortex/cortex-mcp@0.7.0`), a compiled Rust binary distributed as an npm package.
+These tools run inside the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp) (`@temporal-cortex/cortex-mcp`), a compiled Rust binary distributed as an npm package.
 
 **Install and startup lifecycle:**
-1. `npx` resolves `@temporal-cortex/cortex-mcp@0.7.0` from the npm registry (one-time, cached locally after first download)
+1. `npx` resolves `@temporal-cortex/cortex-mcp` from the npm registry (one-time, cached locally after first download)
 2. The postinstall script downloads the platform-specific binary from the [GitHub Release](https://github.com/temporal-cortex/mcp/releases/tag/mcp-v0.7.0) and verifies its SHA256 checksum against the embedded `checksums.json` — **installation halts on mismatch**
 3. The MCP server starts as a local process communicating over stdio (no listening ports)
 4. Calendar tools make authenticated API calls to your configured providers (Google Calendar API, Microsoft Graph API, CalDAV endpoints)
@@ -45,7 +45,7 @@ These tools run inside the [Temporal Cortex MCP server](https://github.com/tempo
 **Network scope:** Calendar tools connect only to your configured providers (`googleapis.com`, `graph.microsoft.com`, or your CalDAV server). No callbacks to Temporal Cortex servers. Telemetry is off by default.
 
 **Pre-run verification** (recommended before first use):
-1. Inspect the npm package without executing: `npm pack @temporal-cortex/cortex-mcp@0.7.0 --dry-run`
+1. Inspect the npm package without executing: `npm pack @temporal-cortex/cortex-mcp --dry-run`
 2. Verify checksums independently against the [GitHub Release](https://github.com/temporal-cortex/mcp/releases/download/mcp-v0.7.0/SHA256SUMS.txt) (see verification pipeline below)
 3. For full containment, run in Docker instead of npx (see Docker containment below)
 
@@ -219,7 +219,7 @@ All calendar IDs use provider-prefixed format:
 
 | Error | Action |
 |-------|--------|
-| "No credentials found" | Run: `npx @temporal-cortex/cortex-mcp@0.7.0 auth google` (or `outlook` / `caldav`). |
+| "No credentials found" | Run: `npx @temporal-cortex/cortex-mcp auth google` (or `outlook` / `caldav`). |
 | "Timezone not configured" | Prompt for IANA timezone. Or run the auth command which configures timezone. |
 | Slot is busy / conflict detected | Use `find_free_slots` to suggest alternatives. Present options to user. |
 | Lock acquisition failed | Another agent is booking the same slot. Wait briefly and retry, or suggest alternative times. |

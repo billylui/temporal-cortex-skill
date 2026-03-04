@@ -1,10 +1,10 @@
-# Contributing to Temporal Cortex Skill
+# Contributing to Temporal Cortex Skills
 
-Thank you for your interest in contributing to the Temporal Cortex Agent Skill.
+Thank you for your interest in contributing to the Temporal Cortex Agent Skills.
 
 ## About This Repo
 
-This is a **documentation and configuration** repository. It contains the `calendar-scheduling` Agent Skill — SKILL.md, reference documents, presets, and scripts. The MCP server source code is maintained separately in [temporal-cortex-mcp](https://github.com/temporal-cortex/mcp).
+This is a **documentation and configuration** repository. It contains the Temporal Cortex Agent Skills (router + 2 sub-skills) — SKILL.md files, reference documents, presets, and scripts. The MCP server source code is maintained separately in [temporal-cortex/mcp](https://github.com/temporal-cortex/mcp).
 
 ## Getting Started
 
@@ -29,8 +29,8 @@ Have an idea? [Open an issue](https://github.com/temporal-cortex/skills/issues/n
 ### Skill Improvements
 
 - Changes to SKILL.md or reference documents
-- New presets in `calendar-scheduling/assets/presets/`
-- Script improvements in `calendar-scheduling/scripts/`
+- New presets in `assets/presets/`
+- Script improvements in `scripts/`
 
 ## Guidelines
 
