@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.8] - 2026-03-06
+
+### Fixed
+- **alias**: Remove blockquote rename notice and HTML comment from `calendar-scheduling` alias — extra text differentiated it from the Benign-scoring router, contributing to Suspicious rating
+- **scheduling**: Add explicit Source & Provenance section to address scanner's "Source: unknown" registry metadata concern
+
+### Changed
+- Version bump to 0.7.8 (tracks MCP server release)
+
 ## [0.7.7] - 2026-03-06
 
 ### Fixed

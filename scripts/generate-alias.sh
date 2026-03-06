@@ -31,15 +31,12 @@ if [[ -d "$REFS_SOURCE" ]]; then
 fi
 
 # Build the alias SKILL.md:
-#   1. Prepend a DO-NOT-EDIT comment
-#   2. Replace name: temporal-cortex → name: calendar-scheduling
-#   3. Append backward-compat note to description
-#   4. Insert rename notice after the first heading
+#   1. Replace name: temporal-cortex → name: calendar-scheduling
+#   2. Append backward-compat note to description
+#   (Minimal changes to keep alias body close to router for scanner parity)
 {
-  echo '<!-- DO NOT EDIT — generated from skills/temporal-cortex/SKILL.md by scripts/generate-alias.sh -->'
-
   awk '
-    BEGIN { in_desc = 0; heading_done = 0 }
+    BEGIN { in_desc = 0 }
 
     # Replace name field
     /^name: temporal-cortex$/ {
@@ -58,15 +55,6 @@ fi
     in_desc && /^[^ ]/ && !/^  / {
       print "  Previously published as calendar-scheduling, now maintained as temporal-cortex — this listing is kept for backward compatibility."
       in_desc = 0
-    }
-
-    # Insert rename notice after the first markdown heading
-    !heading_done && /^# / {
-      print
-      heading_done = 1
-      print ""
-      print "> **Renamed:** This skill was previously published as `calendar-scheduling`. It is now maintained as [`temporal-cortex`](https://github.com/temporal-cortex/skills/blob/main/skills/temporal-cortex/SKILL.md). Both slugs install the same MCP server and provide identical functionality."
-      next
     }
 
     { print }
