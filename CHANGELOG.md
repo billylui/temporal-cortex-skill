@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.7] - 2026-03-06
+
 ### Fixed
 - **alias**: Include `references/SECURITY-MODEL.md` in `calendar-scheduling` directory — ClawHub scanner needs local reference docs for security signals (was converting to absolute GitHub URLs which scanner cannot follow)
 - **ci**: Alias freshness check widened to entire `skills/calendar-scheduling/` directory (catches stale reference doc copies)
+
+### Changed
+- Version bump to 0.7.7 (tracks MCP server release)
 
 ## [0.7.6] - 2026-03-06
 
