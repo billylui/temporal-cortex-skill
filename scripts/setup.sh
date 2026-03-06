@@ -21,7 +21,7 @@ if [[ "$PROVIDER" == "--platform" || "$PROVIDER" == "--cloud" ]]; then
   echo '}'
   echo ""
   echo "Replace YOUR_API_KEY with the key from your dashboard."
-  echo "All 12 tools work identically in Platform Mode."
+  echo "All 15 tools work identically in Platform Mode."
   exit 0
 fi
 
@@ -90,13 +90,14 @@ if [[ -f "${CONFIG_DIR}/credentials.json" ]]; then
   fi
 
   echo ""
-  echo "Setup complete. All 12 MCP tools are now available:"
-  echo "  Layer 0: list_calendars"
+  echo "Setup complete. All 15 MCP tools are now available:"
+  echo "  Layer 0: resolve_identity (Platform Mode)"
   echo "  Layer 1: get_temporal_context, resolve_datetime, convert_timezone,"
   echo "           compute_duration, adjust_timestamp"
-  echo "  Layer 2: list_events, find_free_slots, expand_rrule, check_availability"
-  echo "  Layer 3: get_availability"
-  echo "  Layer 4: book_slot"
+  echo "  Layer 2: list_calendars, list_events, find_free_slots, expand_rrule,"
+  echo "           check_availability"
+  echo "  Layer 3: get_availability, query_public_availability (Platform Mode)"
+  echo "  Layer 4: book_slot, request_booking (Platform Mode)"
   echo ""
   echo "To connect additional providers, run:"
   echo "  bash setup.sh outlook"

@@ -89,9 +89,9 @@ assets/presets/                       # Workflow presets
 |-------|-------|-------|
 | 4. Booking | `book_slot`, `request_booking` | scheduling |
 | 3. Availability | `get_availability`, `query_public_availability` | scheduling |
-| 2. Calendar Ops | `list_events`, `find_free_slots`, `expand_rrule`, `check_availability` | scheduling |
+| 2. Calendar Ops | `list_calendars`, `list_events`, `find_free_slots`, `expand_rrule`, `check_availability` | scheduling |
 | 1. Temporal Context | `get_temporal_context`, `resolve_datetime`, `convert_timezone`, `compute_duration`, `adjust_timestamp` | datetime |
-| 0. Discovery | `list_calendars`, `resolve_identity` | scheduling |
+| 0. Discovery | `resolve_identity` | scheduling |
 
 ## Presets
 

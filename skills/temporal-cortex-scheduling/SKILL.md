@@ -26,7 +26,7 @@ metadata:
 
 # Calendar Scheduling & Booking
 
-11 tools for calendar discovery, event querying, free slot finding, availability checking, RRULE expansion, atomic booking, and Open Scheduling. 9 read-only tools + 2 write tools (`book_slot`, `request_booking`).
+11 tools (Layers 0, 2–4) for calendar discovery, event querying, free slot finding, availability checking, RRULE expansion, atomic booking, and Open Scheduling. 9 read-only tools + 2 write tools (`book_slot`, `request_booking`).
 
 ## Runtime
 
@@ -80,6 +80,12 @@ Build: `docker build -t cortex-mcp https://github.com/temporal-cortex/mcp.git`
 
 ## Tools
 
+### Layer 0 — Discovery (Platform Mode)
+
+| Tool | When to Use |
+|------|------------|
+| `resolve_identity` | DNS for Human Time: resolve an email, phone, or agent ID to a Temporal Cortex slug. Call before `query_public_availability`. |
+
 ### Layer 2 — Calendar Operations
 
 | Tool | When to Use |
@@ -90,11 +96,12 @@ Build: `docker build -t cortex-mcp https://github.com/temporal-cortex/mcp.git`
 | `expand_rrule` | Expand recurrence rules (RFC 5545) into concrete instances. Handles DST, BYSETPOS, EXDATE, leap years. Use `dtstart` as local datetime (no timezone suffix). |
 | `check_availability` | Check if a specific time slot is free. Checks both events and active booking locks. |
 
-### Layer 3 — Cross-Calendar Availability
+### Layer 3 — Availability
 
 | Tool | When to Use |
 |------|------------|
 | `get_availability` | Merged free/busy view across multiple calendars. Pass `calendar_ids` array. Privacy: `"opaque"` (default, hides sources) or `"full"`. |
+| `query_public_availability` | Check another user's public availability by Temporal Link slug. Pass the slug and date to find their open time slots. Platform Mode only. |
 
 ### Layer 4 — Booking
 
@@ -102,18 +109,6 @@ Build: `docker build -t cortex-mcp https://github.com/temporal-cortex/mcp.git`
 |------|------------|
 | `book_slot` | Book a time slot atomically. Lock → verify → write → release. **Always `check_availability` first.** |
 | `request_booking` | Book on another user's public calendar by Temporal Link slug. Requires Platform Mode. |
-
-### Layer 3 — Public Availability (Platform Mode)
-
-| Tool | When to Use |
-|------|------------|
-| `query_public_availability` | Check another user's public availability by Temporal Link slug. Pass the slug and date to find their open time slots. |
-
-### Layer 0 — Discovery (Platform Mode)
-
-| Tool | When to Use |
-|------|------------|
-| `resolve_identity` | DNS for Human Time: resolve an email, phone, or agent ID to a Temporal Cortex slug. Call before `query_public_availability`. |
 
 ## Critical Rules
 
