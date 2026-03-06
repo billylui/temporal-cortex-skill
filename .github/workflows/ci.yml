@@ -7,6 +7,10 @@ on:
     branches: [main]
   schedule:
     - cron: '0 9 * * 1' # Every Monday at 9am UTC
+  # Platform's release-mcp.yml dispatches this after creating the MCP
+  # GitHub Release, so link-check can verify release URLs exist.
+  repository_dispatch:
+    types: [release-ready]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -62,6 +66,11 @@ jobs:
   link-check:
     name: Check Markdown Links
     runs-on: ubuntu-latest
+    # Skip on push to main — release URLs may not exist yet (race condition
+    # with Platform's release-mcp pipeline which creates the GitHub Release).
+    # Runs on: PR (catch broken links before merge), schedule (weekly drift
+    # check), and repository_dispatch (triggered by Platform after release).
+    if: github.event_name != 'push'
     steps:
       - uses: actions/checkout@v6
 
