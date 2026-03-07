@@ -7,12 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-- **agents**: Enhanced `AGENTS.md` with development section — CI jobs, conventions, shell injection prevention, legacy alias workflow, boundaries
+## [0.8.0] - 2026-03-07
 
 ### Fixed
+- **alias**: Rewrite backward-compat note to remove deprecation/abandonment signal — "Also available as temporal-cortex" replaces "this listing is kept for backward compatibility" (VirusTotal + OpenClaw: Suspicious → Benign target)
+- **datetime**: Remove "optionally" and "if present" config.json language — body must not contradict `openclaw.requires.config` declaration (OpenClaw: MEDIUM → HIGH confidence target)
+- **security-model**: Update stale tool counts and add 3 missing tools from v0.7.5 — `resolve_identity`, `query_public_availability`, `request_booking` (VirusTotal: inaccurate security docs reduce trust)
 - **ci**: Add `npmjs.com` to link-check ignore list — npm returns HTTP 403 to bot crawlers, causing false CI failures
 - **ci**: Pin `action-shellcheck` from `@master` to `@2.0.0` for reproducible builds
+
+### Added
+- **router**: Source & Provenance section (parity with datetime and scheduling sub-skills) — addresses VirusTotal "opaque binary" concern and OpenClaw "no homepage/source in registry metadata" finding
+- **security-model**: `request_booking` tool annotations and Two-Phase Commit documentation
+
+### Changed
+- **agents**: Enhanced `AGENTS.md` with development section — CI jobs, conventions, shell injection prevention, legacy alias workflow, boundaries
+- Version bump to 0.8.0 (tracks MCP server release)
 
 ## [0.7.9] - 2026-03-07
 
@@ -360,7 +370,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - .mcp.json for local MCP server connection
 - CI pipeline: SKILL.md validation, ShellCheck, JSON validation, link check
 
-[Unreleased]: https://github.com/temporal-cortex/skills/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/temporal-cortex/skills/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/temporal-cortex/skills/compare/v0.7.9...v0.8.0
+[0.7.9]: https://github.com/temporal-cortex/skills/compare/v0.7.8...v0.7.9
+[0.7.8]: https://github.com/temporal-cortex/skills/compare/v0.7.7...v0.7.8
+[0.7.7]: https://github.com/temporal-cortex/skills/compare/v0.7.6...v0.7.7
+[0.7.6]: https://github.com/temporal-cortex/skills/compare/v0.7.5...v0.7.6
+[0.7.5]: https://github.com/temporal-cortex/skills/compare/v0.7.4...v0.7.5
+[0.7.4]: https://github.com/temporal-cortex/skills/compare/v0.7.1...v0.7.4
 [0.7.1]: https://github.com/temporal-cortex/skills/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/temporal-cortex/skills/compare/v0.6.2...v0.7.0
 [0.6.2]: https://github.com/temporal-cortex/skills/compare/v0.6.1...v0.6.2

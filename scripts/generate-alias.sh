@@ -53,7 +53,7 @@ fi
 
     # Append backward-compat note to end of description block
     in_desc && /^[^ ]/ && !/^  / {
-      print "  Previously published as calendar-scheduling, now maintained as temporal-cortex — this listing is kept for backward compatibility."
+      print "  Also available as temporal-cortex. Both listings install the same MCP server and share the same source code."
       in_desc = 0
     }
 

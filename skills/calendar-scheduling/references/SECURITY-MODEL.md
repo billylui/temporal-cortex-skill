@@ -29,8 +29,9 @@ No other filesystem paths are accessed. Verifiable by:
 
 | Layer | Tools | Network Access |
 |-------|-------|---------------|
+| Layer 0 (discovery) | `resolve_identity` | **Platform API only** — resolves email to Temporal Link slug |
 | Layer 1 (datetime) | `get_temporal_context`, `resolve_datetime`, `convert_timezone`, `compute_duration`, `adjust_timestamp` | **None** — pure local computation |
-| Layers 2-4 (scheduling) | `list_calendars`, `list_events`, `find_free_slots`, `check_availability`, `expand_rrule`, `get_availability`, `book_slot` | Calendar provider APIs only |
+| Layers 2-4 (scheduling) | `list_calendars`, `list_events`, `find_free_slots`, `check_availability`, `expand_rrule`, `get_availability`, `query_public_availability`, `book_slot`, `request_booking` | Calendar provider APIs only |
 
 Scheduling tools connect only to your configured providers:
 - Google Calendar: `googleapis.com`
@@ -41,14 +42,17 @@ No callbacks to Temporal Cortex servers. Telemetry is off by default.
 
 ## Tool Annotations
 
-Only `book_slot` modifies external state. All other tools (11/12) are read-only and idempotent — safe to retry without side effects.
+Only `book_slot` and `request_booking` modify external state. All other tools (13/15) are read-only and idempotent — safe to retry without side effects.
 
-| Property | Value | Meaning |
-|----------|-------|---------|
-| `readOnlyHint` | `false` | `book_slot` creates calendar events |
-| `destructiveHint` | `false` | Never deletes or overwrites existing events |
-| `idempotentHint` | `false` | Calling `book_slot` twice creates two events |
-| `openWorldHint` | `true` | Makes external API calls to calendar providers |
+| Tool | `readOnlyHint` | `destructiveHint` | `idempotentHint` | `openWorldHint` |
+|------|---------------|-------------------|-------------------|-----------------|
+| `book_slot` | `false` | `false` | `false` | `true` |
+| `request_booking` | `false` | `false` | `false` | `true` |
+
+- **readOnlyHint: false** — both tools create calendar events
+- **destructiveHint: false** — never deletes or overwrites existing events
+- **idempotentHint: false** — calling either tool twice creates two events
+- **openWorldHint: true** — makes external API calls to calendar providers
 
 ## Two-Phase Commit (book_slot)
 
@@ -60,3 +64,5 @@ The `book_slot` tool uses Two-Phase Commit (2PC) to guarantee conflict-free book
 4. **RELEASE** — Release the exclusive lock
 
 If any step fails, the lock is released and the booking is aborted. No partial writes.
+
+`request_booking` follows the same protocol when booking on behalf of an external attendee via a Temporal Link.
