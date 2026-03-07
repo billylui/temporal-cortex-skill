@@ -29,16 +29,19 @@ No other filesystem paths are accessed. Verifiable by:
 
 | Layer | Tools | Network Access |
 |-------|-------|---------------|
-| Layer 0 (discovery) | `resolve_identity` | **Platform API only** — resolves email to Temporal Link slug |
+| Layer 0 (discovery) | `resolve_identity` | **Platform API** (`api.temporal-cortex.com`) — resolves email to Temporal Link slug. Only available in Platform Mode. |
 | Layer 1 (datetime) | `get_temporal_context`, `resolve_datetime`, `convert_timezone`, `compute_duration`, `adjust_timestamp` | **None** — pure local computation |
-| Layers 2-4 (scheduling) | `list_calendars`, `list_events`, `find_free_slots`, `check_availability`, `expand_rrule`, `get_availability`, `query_public_availability`, `book_slot`, `request_booking` | Calendar provider APIs only |
+| Layers 2-3 (calendar ops) | `list_calendars`, `list_events`, `find_free_slots`, `check_availability`, `expand_rrule`, `get_availability`, `book_slot` | **Calendar provider APIs only** (`googleapis.com`, `graph.microsoft.com`, or CalDAV) |
+| Layers 3-4 (Platform scheduling) | `query_public_availability`, `request_booking` | **Platform API** (`api.temporal-cortex.com`) — cross-user scheduling. Only available in Platform Mode. |
 
 Scheduling tools connect only to your configured providers:
 - Google Calendar: `googleapis.com`
 - Microsoft Outlook: `graph.microsoft.com`
 - CalDAV: your configured server endpoint
 
-No callbacks to Temporal Cortex servers. Telemetry is off by default.
+**Local Mode (default):** No calls to Temporal Cortex servers. No telemetry. All network traffic goes exclusively to your configured calendar providers.
+
+**Platform Mode:** Three additional tools (`resolve_identity`, `query_public_availability`, `request_booking`) call `api.temporal-cortex.com` to support cross-user scheduling via Temporal Links. No credential data is included in these calls — only the email or slug being resolved. All other tools behave identically to Local Mode.
 
 ## Tool Annotations
 

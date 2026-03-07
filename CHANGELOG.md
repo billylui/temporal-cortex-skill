@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-03-07
+
+### Fixed
+- **security-model**: Clarify `resolve_identity` calls Platform API (`api.temporal-cortex.com`), not calendar providers — scanner flagged "Platform API" as ambiguous
+- **security-model**: Split Network Scope table into calendar-provider-only tools vs Platform API tools — `query_public_availability` and `request_booking` call `api.temporal-cortex.com`, not calendar providers directly
+- **all skills**: Replace "No callbacks to Temporal Cortex servers. Telemetry is off by default." with explicit Local Mode / Platform Mode distinction — "off by default" implied telemetry can be enabled (scanner ambiguity); "no callbacks" contradicts Platform Mode tools
+- **router + scheduling**: Network scope now documents Local Mode (no Temporal Cortex calls, no telemetry) vs Platform Mode (3 tools call `api.temporal-cortex.com`, no credentials transmitted)
+
+### Changed
+- Version bump to 0.8.1 (tracks MCP server release)
+
 ## [0.8.0] - 2026-03-07
 
 ### Fixed
@@ -370,7 +381,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - .mcp.json for local MCP server connection
 - CI pipeline: SKILL.md validation, ShellCheck, JSON validation, link check
 
-[Unreleased]: https://github.com/temporal-cortex/skills/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/temporal-cortex/skills/compare/v0.8.1...HEAD
+[0.8.1]: https://github.com/temporal-cortex/skills/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/temporal-cortex/skills/compare/v0.7.9...v0.8.0
 [0.7.9]: https://github.com/temporal-cortex/skills/compare/v0.7.8...v0.7.9
 [0.7.8]: https://github.com/temporal-cortex/skills/compare/v0.7.7...v0.7.8

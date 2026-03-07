@@ -12,7 +12,7 @@ Public Agent Skills repo. Follows the [Agent Skills specification](https://agent
 
 - NEVER interpolate `${VAR}` into `python3 -c` strings (shell injection)
 - Pin npm versions in `.mcp.json` and `setup.sh` only — NOT in user-facing docs
-- Version tracks MCP server (currently 0.8.0)
+- Version tracks MCP server (currently 0.8.1)
 - SKILL.md body < 500 lines, references < 300 lines
 - Relative links within-skill, absolute GitHub URLs for cross-skill references
 
