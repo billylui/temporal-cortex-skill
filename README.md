@@ -5,16 +5,16 @@
 
 **v0.8.1** · March 2026 · [Changelog](CHANGELOG.md) · **Website:** [temporal-cortex.com](https://temporal-cortex.com)
 
-Agent Skills for AI calendar scheduling using the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp). Teaches AI agents the correct workflow for calendar discovery, temporal orientation, datetime resolution, multi-calendar availability merging, and conflict-free booking. Compatible with 26+ agent platforms.
+Agent Skills that teach AI agents to schedule meetings with anyone — from finding contacts to booking or sending proposals. Built on the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp) with 18 tools across 5 layers. Compatible with 26+ agent platforms.
 
 ## Skills
 
 | Skill | Description | Tools |
 |-------|-------------|-------|
-| [temporal-cortex](skills/temporal-cortex/SKILL.md) | Router — routes calendar intents to sub-skills | All 15 |
+| [temporal-cortex](skills/temporal-cortex/SKILL.md) | Router — routes calendar intents to sub-skills | All 18 |
 | [temporal-cortex-datetime](skills/temporal-cortex-datetime/SKILL.md) | Time resolution, timezone conversion, duration math (no credentials needed) | 5 |
-| [temporal-cortex-scheduling](skills/temporal-cortex-scheduling/SKILL.md) | Calendar discovery, events, free slots, availability, RRULE, booking, and Open Scheduling | 11 |
-| [calendar-scheduling](skills/calendar-scheduling/SKILL.md) | Legacy alias for temporal-cortex (auto-generated) | All 15 |
+| [temporal-cortex-scheduling](skills/temporal-cortex-scheduling/SKILL.md) | Contact resolution, calendar ops, availability, booking, and Open Scheduling | 14 |
+| [calendar-scheduling](skills/calendar-scheduling/SKILL.md) | Legacy alias for temporal-cortex (auto-generated) | All 18 |
 
 ## Installation
 
