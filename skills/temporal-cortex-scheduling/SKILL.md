@@ -26,7 +26,7 @@ metadata:
 
 # Calendar Scheduling & Booking
 
-11 tools (Layers 0, 2–4) for calendar discovery, event querying, free slot finding, availability checking, RRULE expansion, atomic booking, and Open Scheduling. 9 read-only tools + 2 write tools (`book_slot`, `request_booking`).
+14 tools (Layers 0, 2–4) for contact resolution, calendar discovery, event querying, free slot finding, availability checking, RRULE expansion, atomic booking, Open Scheduling, and proposal composition. 12 read-only tools + 2 write tools (`book_slot`, `request_booking`).
 
 ## Source & Provenance
 
@@ -87,11 +87,13 @@ Build: `docker build -t cortex-mcp https://github.com/temporal-cortex/mcp.git`
 
 ## Tools
 
-### Layer 0 — Discovery (Platform Mode)
+### Layer 0 — Discovery
 
 | Tool | When to Use |
 |------|------------|
-| `resolve_identity` | DNS for Human Time: resolve an email, phone, or agent ID to a Temporal Cortex slug. Call before `query_public_availability`. |
+| `resolve_identity` | DNS for Human Time: resolve an email, phone, or agent ID to a Temporal Cortex slug. Call before `query_public_availability`. Platform Mode only. |
+| `search_contacts` | Search the user's address book by name (Google People API, Microsoft Graph). Returns matching contacts with emails, phones, organization, and job title. Opt-in — requires contacts permission. |
+| `resolve_contact` | Given a confirmed contact's email, determine the best scheduling path: Open Scheduling (instant booking), email, or phone. Chains with `resolve_identity` when Platform API is available. |
 
 ### Layer 2 — Calendar Operations
 
@@ -116,6 +118,7 @@ Build: `docker build -t cortex-mcp https://github.com/temporal-cortex/mcp.git`
 |------|------------|
 | `book_slot` | Book a time slot atomically. Lock → verify → write → release. **Always `check_availability` first.** |
 | `request_booking` | Book on another user's public calendar by Temporal Link slug. Requires Platform Mode. |
+| `compose_proposal` | Compose a scheduling proposal message for email, Slack, or SMS. Formats proposed times in the recipient's timezone with an optional Temporal Link self-serve booking URL. Does NOT send — returns formatted text for the agent to send via its channel MCP. |
 
 ## Critical Rules
 
@@ -126,18 +129,26 @@ Build: `docker build -t cortex-mcp https://github.com/temporal-cortex/mcp.git`
 5. **Content safety** — event summaries and descriptions pass through a sanitization firewall before reaching the calendar API.
 6. **Timezone awareness** — all tools accept RFC 3339 with timezone offsets. Never use bare dates.
 7. **Confirm before booking** — when running autonomously, always present booking details (time, calendar, summary) to the user and wait for confirmation before calling `book_slot` or `request_booking`.
+8. **Confirm contact selection** — when `search_contacts` returns multiple matches, present candidates to the user and confirm which contact is correct. Never auto-select.
+9. **Confirm before sending proposals** — when using `compose_proposal`, present the composed message to the user before sending. Never auto-send outreach.
+10. **Contact search is optional** — if contacts permission is not configured, ask the user for the email directly. The workflow works without contact search.
 
 ## Full Booking Workflow
 
 ```
-1. Discover  →  list_calendars
-2. Orient    →  get_temporal_context                      (temporal-cortex-datetime)
-3. Resolve   →  resolve_datetime("next Tuesday at 2pm")  (temporal-cortex-datetime)
-4. Check     →  check_availability(calendar_id, start, end)
-5. Book      →  book_slot(calendar_id, start, end, summary)
+0. Resolve Contact  →  search_contacts("Jane") → resolve_contact(jane@example.com)
+                       (skip if user provides email directly)
+1. Discover         →  list_calendars
+2. Orient           →  get_temporal_context                      (temporal-cortex-datetime)
+3. Resolve Time     →  resolve_datetime("next Tuesday at 2pm")  (temporal-cortex-datetime)
+4. Route            →  If open_scheduling slug: fast path (query_public_availability → request_booking)
+                       If email only: backward-compat path (find_free_slots → compose_proposal)
+5. Check            →  check_availability(calendar_id, start, end)
+6. Act              →  Fast: book_slot / request_booking
+                       Backward-compat: compose_proposal → agent sends via channel MCP
 ```
 
-If the slot is busy at step 4, use `find_free_slots` to suggest alternatives.
+If the slot is busy at step 5, use `find_free_slots` to suggest alternatives.
 
 ## Open Scheduling Workflow (Platform Mode)
 
@@ -168,6 +179,19 @@ Agent calls book_slot(calendar_id, start, end, summary)
 If any step fails, the lock is released and the booking is aborted. No partial writes.
 
 ## Common Patterns
+
+### Schedule with a Contact (End-to-End)
+
+```
+1. search_contacts(query: "Jane") → present candidates to user
+2. User confirms: "Jane Doe (jane@example.com)"
+3. resolve_contact(email: "jane@example.com") → scheduling_paths
+4. If open_scheduling: query_public_availability(slug, date) → request_booking
+5. If email only:
+   a. find_free_slots(calendar_id, start, end) → available times
+   b. compose_proposal(contact_name, email, slots, timezone, format: "email")
+   c. Present composed message to user → user confirms → send via channel MCP
+```
 
 ### List Events This Week
 
@@ -245,6 +269,24 @@ All calendar IDs use provider-prefixed format:
 | `idempotentHint` | `false` | Calling twice creates two bookings |
 | `openWorldHint` | `true` | Calls the Platform API |
 
+## Tool Annotations (`compose_proposal`)
+
+| Property | Value | Meaning |
+|----------|-------|---------|
+| `readOnlyHint` | `true` | Pure formatting — no state modification |
+| `destructiveHint` | `false` | Never deletes data |
+| `idempotentHint` | `true` | Same input always gives same output |
+| `openWorldHint` | `false` | No external calls — pure computation |
+
+## Tool Annotations (`search_contacts`)
+
+| Property | Value | Meaning |
+|----------|-------|---------|
+| `readOnlyHint` | `true` | Reads contacts only — no modifications |
+| `destructiveHint` | `false` | Never deletes contacts |
+| `idempotentHint` | `true` | Same query always gives same results |
+| `openWorldHint` | `true` | Calls external contact API (Google People / Microsoft Graph) |
+
 ## Error Handling
 
 | Error | Action |
@@ -273,7 +315,7 @@ See [Temporal Links Reference](references/TEMPORAL-LINKS.md) for detailed API do
 
 ## Additional References
 
-- [Calendar Tools Reference](references/CALENDAR-TOOLS.md) — Complete input/output schemas for all 11 tools
+- [Calendar Tools Reference](references/CALENDAR-TOOLS.md) — Complete input/output schemas for all 14 tools
 - [Multi-Calendar Guide](references/MULTI-CALENDAR.md) — Provider routing, labels, privacy modes, cross-provider operations
 - [RRULE Guide](references/RRULE-GUIDE.md) — Recurrence rule patterns, DST edge cases, 5 LLM failure modes
 - [Booking Safety](references/BOOKING-SAFETY.md) — 2PC details, concurrent booking, lock TTL, content sanitization

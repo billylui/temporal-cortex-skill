@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **router**: Expand core workflow from 5 steps to 7 steps — add Step 0 (Resolve Contact) and explicit routing step
+- **router**: Add `search_contacts`, `resolve_contact`, `compose_proposal` to routing table and tool layer table (15 → 18 tools)
+- **router**: Add safety rules for contact confirmation (#6), proposal review (#7), and optional contact search (#8)
+- **scheduling**: Add 3 new tools — `search_contacts` (Layer 0), `resolve_contact` (Layer 0), `compose_proposal` (Layer 4)
+- **scheduling**: Add "Schedule with a Contact" end-to-end workflow pattern (search → resolve → propose/book)
+- **scheduling**: Add tool annotations for `compose_proposal` and `search_contacts`
+- **scheduling**: Expand Full Booking Workflow to 7 steps with routing logic
+- **scheduling**: Add critical rules #8-10 for contact and proposal safety
+- **agents**: Update tool counts (15 → 18 router/alias, 11 → 14 scheduling)
+
 ## [0.8.1] - 2026-03-07
 
 ### Fixed
