@@ -21,7 +21,7 @@ if [[ "$PROVIDER" == "--platform" || "$PROVIDER" == "--cloud" ]]; then
   echo '}'
   echo ""
   echo "Replace YOUR_API_KEY with the key from your dashboard."
-  echo "All 15 tools work identically in Platform Mode."
+  echo "All 18 tools work identically in Platform Mode."
   exit 0
 fi
 
