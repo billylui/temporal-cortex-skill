@@ -120,7 +120,7 @@ The original `calendar-scheduling` skill was renamed to `temporal-cortex` at v0.
 
 ### How do the router and sub-skills interact?
 
-The router skill (`temporal-cortex`) knows the full 5-step workflow and routes to the appropriate sub-skill based on intent. For a full scheduling workflow (resolve time → check availability → book), the agent progresses through datetime → scheduling sub-skills.
+The router skill (`temporal-cortex`) knows the full 7-step workflow and routes to the appropriate sub-skill based on intent. For a full scheduling workflow (resolve time → check availability → book), the agent progresses through datetime → scheduling sub-skills.
 
 ## Listings
 
