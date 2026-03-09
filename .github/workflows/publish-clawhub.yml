@@ -66,5 +66,6 @@ jobs:
             --slug ${{ matrix.skill }} \
             --name "${{ matrix.skill }}" \
             --version "${VERSION}" \
-            --changelog "Release v${VERSION}"
+            --changelog "Release v${VERSION}" \
+            --accept-license-terms
           echo "Published ${{ matrix.skill }} v${VERSION}"
