@@ -42,7 +42,7 @@ jobs:
           node-version: "22"
 
       - name: Install ClawHub CLI
-        run: npm install -g clawhub
+        run: npm install -g clawhub@latest
 
       - name: Resolve version
         id: version
@@ -62,10 +62,10 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
           echo "Publishing ${{ matrix.skill }} v${VERSION} to ClawHub..."
+          echo "ClawHub CLI version: $(clawhub --version 2>/dev/null || echo 'unknown')"
           clawhub publish skills/${{ matrix.skill }} \
             --slug ${{ matrix.skill }} \
             --name "${{ matrix.skill }}" \
             --version "${VERSION}" \
-            --changelog "Release v${VERSION}" \
-            --accept-license-terms
+            --changelog "Release v${VERSION}"
           echo "Published ${{ matrix.skill }} v${VERSION}"
