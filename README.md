@@ -5,7 +5,7 @@
 
 **v0.9.0** · March 2026 · [Changelog](CHANGELOG.md) · **Website:** [temporal-cortex.com](https://temporal-cortex.com)
 
-Agent Skills that teach AI agents to schedule meetings with anyone — from finding contacts to booking or sending proposals. Built on the [Temporal Cortex MCP server](https://github.com/temporal-cortex/mcp) with 18 tools across 5 layers. Compatible with 26+ agent platforms.
+Agent Skills that give AI agents scheduling capabilities — from finding contacts to booking or sending proposals. Built on [Temporal Cortex](https://github.com/temporal-cortex/mcp) open scheduling infrastructure with 18 tools across 5 layers. Compatible with 26+ agent platforms.
 
 ## Skills
 
