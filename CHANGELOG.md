@@ -5,7 +5,7 @@ All notable changes to the Temporal Cortex Agent Skill will be documented in thi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.9.0] - 2026-03-09
 
 ### Added
 - **router**: Expand core workflow from 5 steps to 7 steps — add Step 0 (Resolve Contact) and explicit routing step
@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **scheduling**: Expand Full Booking Workflow to 7 steps with routing logic
 - **scheduling**: Add critical rules #8-10 for contact and proposal safety
 - **agents**: Update tool counts (15 → 18 router/alias, 11 → 14 scheduling)
+
+### Changed
+- Version bump to 0.9.0 (tracks MCP server release)
 
 ## [0.8.1] - 2026-03-07
 
