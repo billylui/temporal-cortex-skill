@@ -29,6 +29,12 @@ metadata:
 
 This is the router skill for Temporal Cortex calendar operations. It routes your task to the right sub-skill based on intent.
 
+## Who is this for?
+
+**If you're an individual user** (Claude Desktop, Cursor, OpenClaw, Manus) — install this skill and let your AI agent manage your calendar. Connect your Google, Outlook, or CalDAV calendars, and the agent handles availability, scheduling, and booking without double-booking.
+
+**If you're building a product with scheduling** — use the same MCP server as your scheduling backend. 18 tools, atomic booking via Two-Phase Commit, and cross-provider availability merging. See the [REST API reference](https://temporal-cortex.com/docs/rest-api) and [Platform docs](https://app.temporal-cortex.com) for developer integration.
+
 ## Source & Provenance
 
 - **Homepage:** [temporal-cortex.com](https://temporal-cortex.com)
