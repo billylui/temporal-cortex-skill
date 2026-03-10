@@ -16,6 +16,8 @@ Agent Skills that give AI agents scheduling capabilities — from finding contac
 | [temporal-cortex-scheduling](skills/temporal-cortex-scheduling/SKILL.md) | Contact resolution, calendar ops, availability, booking, and Open Scheduling | 14 |
 | [calendar-scheduling](skills/calendar-scheduling/SKILL.md) | Legacy alias for temporal-cortex (auto-generated) | All 18 |
 
+> **Zero-setup Layer 1:** The `temporal-cortex-datetime` skill works immediately — no OAuth, no API keys, no configuration. All 5 temporal tools (timezone conversion, datetime resolution, duration math) are pure computation. Connect calendar providers only when you need calendar operations (Layers 2-4).
+
 ## Installation
 
 ```bash
