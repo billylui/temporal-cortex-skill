@@ -58,11 +58,20 @@ jobs:
         env:
           CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
 
+      - name: Patch ClawHub CLI (acceptLicenseTerms workaround)
+        run: |
+          # ClawHub CLI v0.7.0 bug: publish payload missing acceptLicenseTerms field
+          # See https://github.com/openclaw/clawhub/issues/672
+          # Remove this step once clawhub >= 0.7.1 is released with the fix
+          PUBLISH_JS="$(npm root -g)/clawhub/dist/cli/commands/publish.js"
+          sed -i 's/slug,/slug, acceptLicenseTerms: true,/' "$PUBLISH_JS"
+          echo "Patched $PUBLISH_JS"
+
       - name: Publish ${{ matrix.skill }}
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
           echo "Publishing ${{ matrix.skill }} v${VERSION} to ClawHub..."
-          echo "ClawHub CLI version: $(clawhub --version 2>/dev/null || echo 'unknown')"
+          echo "ClawHub CLI version: $(clawhub -V 2>/dev/null || echo 'unknown')"
           clawhub publish skills/${{ matrix.skill }} \
             --slug ${{ matrix.skill }} \
             --name "${{ matrix.skill }}" \
