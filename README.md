@@ -3,7 +3,7 @@
 [![CI](https://github.com/temporal-cortex/skills/actions/workflows/ci.yml/badge.svg)](https://github.com/temporal-cortex/skills/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**v0.9.0** · March 2026 · [Changelog](CHANGELOG.md) · **Website:** [temporal-cortex.com](https://temporal-cortex.com)
+**v0.9.1** · March 2026 · [Changelog](CHANGELOG.md) · **Website:** [temporal-cortex.com](https://temporal-cortex.com)
 
 Agent Skills that give AI agents scheduling capabilities — from finding contacts to booking or sending proposals. Built on [Temporal Cortex](https://github.com/temporal-cortex/mcp) open scheduling infrastructure with 18 tools across 5 layers. Compatible with 26+ agent platforms.
 
